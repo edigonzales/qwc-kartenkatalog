@@ -49,15 +49,31 @@ Secrets gehören ausschliesslich in GitHub, weder in `.env` noch ins Image. Der 
 
 ## Entwicklung ohne Container
 
-Voraussetzungen: Node **22.13.0** (siehe `.nvmrc`), npm und ein laufendes Backend auf Port 8083, beispielsweise aus Compose (`docker compose up -d kartenkatalog`).
+Voraussetzungen: Node **22.13.0** (siehe `.nvmrc`), npm, Docker mit Compose v2 und Internetzugang.
 
 ```sh
 nvm use                     # falls nvm installiert ist
-npm run setup
-npm run start:remote
+npm run setup               # einmalig und nach Änderungen am Lockfile
+npm run dev                 # Backend-Container + QWC/Plugin auf dem Host
 ```
 
-Öffnen: [lokale Karte](http://127.0.0.1:8082/map/). Webpack übernimmt Quellcodeänderungen mit Hot Reload. Nach Änderungen an `frontend/server/`, `frontend/dev/` oder Webpack den Dev-Server neu starten. `CATALOG_API_ORIGIN` überschreibt dessen Backend-Origin; im Container ist er intern `http://kartenkatalog:8080`.
+Öffnen: [lokale Karte](http://127.0.0.1:8082/map/). Der Dev-Start prüft Konfiguration, lesbare XTF und Frontend-Abhängigkeiten, stoppt den QWC-Container dieses Compose-Projekts und startet ausschliesslich das Backend-Image. Er wartet bis zu 180 Sekunden auf Backend-Readiness und startet danach Webpack im Vordergrund. Änderungen an QWC-App, Plugin, JavaScript und CSS werden automatisch übernommen: per Hot Module Replacement, soweit unterstützt, sonst durch automatisches Neuladen. React-Zustand kann beim Neuladen verloren gehen. Kein QWC-Image-Build ist erforderlich.
+
+**Strg+C** beendet den lokalen Dev-Server und seine Kindprozesse; das Backend läuft weiter. Der QWC-Container wird dabei nicht automatisch neu gestartet. `./scripts/up.sh` wechselt zurück zum veröffentlichten Containerbetrieb; `./scripts/up.sh --local-qwc` baut QWC mit den lokalen Änderungen.
+
+Backend und Frontend lassen sich auch unabhängig steuern:
+
+```sh
+npm run catalog:up          # nur Backend pullen und starten
+npm run catalog:stop        # nur Backend stoppen, Container bleibt erhalten
+npm run start:remote        # nur QWC-Dev-Server, Backend muss bereits laufen
+```
+
+`catalog:up` entspricht `./scripts/up.sh --catalog-only`, `catalog:stop` entspricht `./scripts/down.sh --catalog-only`. Der Backend-Einzelstart wartet auf den Compose-Servicestart; `npm run dev` prüft zusätzlich die HTTP-Readiness. `--catalog-only` lässt sich nicht mit `--local-qwc` kombinieren. `./scripts/down.sh` entfernt weiterhin den gesamten Compose-Stack.
+
+`npm run dev` übernimmt `QWC_PORT`, `CATALOG_PORT`, Image und XTF-Pfad aus der Compose-Konfiguration (`.env`, Shell-Werte haben Vorrang). Der Backend-Origin stammt aus dem tatsächlich veröffentlichten Backend-Port. Beispielsweise startet `QWC_PORT=18082 CATALOG_PORT=18083 npm run dev` die Karte auf Port 18082 mit Backend auf 18083. Beide bleiben an `127.0.0.1` gebunden. Belegt ein fremder Prozess den Dev-Port, bricht der Start mit Hinweis ab.
+
+Nach Änderungen an `frontend/server/`, `frontend/dev/` oder Webpack den Dev-Server neu starten. Für den unabhängigen Frontend-Start überschreibt `CATALOG_API_ORIGIN` dessen Backend-Origin (Standard `http://127.0.0.1:8083`); `QWC_PORT` überschreibt dessen Port (Standard 8082). Dieser direkte Start liest selbst keine `.env`-Datei. Im Container ist der Backend-Origin intern `http://kartenkatalog:8080`.
 
 Alternativ das Backend gemäss dessen README mit Quarkus starten:
 
@@ -66,7 +82,7 @@ cd ../kartenkatalog
 ./gradlew quarkusDev -Dquarkus.http.port=8083
 ```
 
-`npm start` erhält den ursprünglichen Upstream-Modus mit lokaler Theme-Generierung und benötigt die dort konfigurierten GIS-/Fachservices. `npm test`, `npm run lint:catalog` und `bash scripts/test-scripts.sh` prüfen die lokalen Erweiterungen. `python3 scripts/smoke.py` prüft einen laufenden Stack (optional `--url http://127.0.0.1:18082`).
+`npm start` erhält den ursprünglichen Upstream-Modus mit lokaler Theme-Generierung und benötigt die dort konfigurierten GIS-/Fachservices. `npm test`, `npm run lint:catalog`, `node --test scripts/dev.test.cjs` und `bash scripts/test-scripts.sh` prüfen die lokalen Erweiterungen. `python3 scripts/smoke.py` prüft einen laufenden Stack (optional `--url http://127.0.0.1:18082`).
 
 ## Live-Anbindung und Plugin
 
@@ -74,6 +90,6 @@ Container und Remote-Dev-Modus laden die öffentliche Konfiguration bei jedem Ab
 
 Der Zugriff bleibt anonym: Login, Editing, Analytics und Fachfunktionen ohne freigegebene Dienste sind deaktiviert. Der gemeinsame Proxy erlaubt ausschliesslich die definierten öffentlichen Lesepfade mit GET/HEAD und reicht keine Cookies weiter. Die Backend-API wird same-origin über `/catalog-api/v1/catalog` bereitgestellt.
 
-Das Kartenkatalog-Plugin öffnet sich links und ist unter **Karte & Werkzeuge → Kartenkatalog** erreichbar. Es bietet Suche, aufklappbare Themen, Metadaten sowie Hinzufügen/Aktivieren von Ebenen über die QWC-Layerverwaltung. Das Default-Thema ist zunächst leer; Layerdefinitionen werden live nachgeladen. [Gemeindegrenzen testen](http://127.0.0.1:8082/map/?l=ch.so.agi.gemeindegrenzen).
+Das Kartenkatalog-Plugin bleibt beim Kartenstart geschlossen und lässt sich unter **Karte & Werkzeuge → Kartenkatalog** rechts öffnen, auf derselben Seite wie „Layers & Legends“. Dies gilt für Desktop und Mobilansicht. Es bietet Suche, aufklappbare Themen, Metadaten sowie Hinzufügen/Aktivieren von Ebenen über die QWC-Layerverwaltung. Das Default-Thema ist zunächst leer; Layerdefinitionen werden live nachgeladen. [Gemeindegrenzen testen](http://127.0.0.1:8082/map/?l=ch.so.agi.gemeindegrenzen).
 
 [Plugin und QWC-Anbindung](docs/plugin.md) · [Architektur](docs/architecture.md) · [Upstream und Updates](docs/upstream.md)

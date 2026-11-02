@@ -25,7 +25,13 @@ catalog = json.loads(get('/catalog-api/v1/catalog')[2])
 assert catalog['themes'] and any(entry['layers'] for entry in catalog['themes'])
 # The shared adapter must still be active in the packaged application.
 config = json.loads(get('/map/config.json?lang=de-CH')[2])
-assert config['startupTask']['key'] == 'Kartenkatalog'
+assert (config.get('startupTask') or {}).get('key') != 'Kartenkatalog'
+for device in ['desktop', 'mobile']:
+    plugins = config['plugins'][device]
+    assert any(p['name'] == 'Kartenkatalog' for p in plugins)
+    assert any(item.get('key') == 'Kartenkatalog'
+               for p in plugins if p['name'] == 'TopBar'
+               for item in p.get('cfg', {}).get('menuItems', []))
 assert not any(p['name'] in ('Editing', 'Authentication') for p in config['plugins']['desktop'])
 assert 'themes' in json.loads(get('/map/themes.json')[2])
 for route in ['/auth/info', '/catalog-api/actuator/env', '/map/editConfig.json']:

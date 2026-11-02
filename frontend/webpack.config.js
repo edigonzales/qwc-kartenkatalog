@@ -45,7 +45,9 @@ module.exports = (env, argv) => {
             ],
             compress: true,
             hot: true,
-            port: 8080,
+            liveReload: true,
+            host: remote ? "127.0.0.1" : "0.0.0.0",
+            port: remote ? Number(process.env.QWC_PORT || 8082) : 8080,
             setupMiddlewares: remote ? (middlewares) => {
                 middlewares.unshift({name: "live-config", middleware: require("./dev/remote.cjs").createRemoteMiddleware()});
                 return middlewares;

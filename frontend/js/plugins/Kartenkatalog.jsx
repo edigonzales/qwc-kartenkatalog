@@ -162,7 +162,7 @@ function Kartenkatalog({catalogUrl = '/catalog-api/v1/catalog', dispatch, layers
             </details>))}
         </div>
     </>);
-    return (<SideBar icon="catalog" id="Kartenkatalog" minWidth="20em" side="left" title="Kartenkatalog" width={width}>
+    return (<SideBar icon="catalog" id="Kartenkatalog" minWidth="20em" side="right" title="Kartenkatalog" width={width}>
         <div className="kartenkatalog-body" role="body">
             {loading ? <div aria-live="polite" className="kartenkatalog-loading"><Spinner /> Kartenkatalog wird geladen …</div> :
                 loadError ? <div className="kartenkatalog-empty"><p role="alert">{loadError}</p><button className="button" onClick={() => setReload(value => value + 1)} type="button"><Icon icon="refresh" /> Erneut laden</button></div> :

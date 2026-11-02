@@ -33,7 +33,7 @@ function adaptConfig(input) {
             }
         }
     }
-    config.startupTask = {key: 'Kartenkatalog'};
+    if (config.startupTask?.key === 'Kartenkatalog') delete config.startupTask;
     return config;
 }
 function rewriteUrls(value) {

@@ -13,6 +13,24 @@ test('anonymous overlay preserves unrelated live settings and input', () => {
 test('rewrite only live WMTS origin', () => {
     assert.deepEqual(rewriteUrls({url: 'https://geo.so.ch/api/wmts/{TileRow}', other: 'https://other.ch/api/wmts/x'}), {url: '/api/wmts/{TileRow}', other: 'https://other.ch/api/wmts/x'});
 });
+test('catalog stays closed when no startup task is configured', () => {
+    const original = {plugins: {}};
+    const config = adaptConfig(original);
+    assert.equal(Object.hasOwn(config, 'startupTask'), false);
+    assert.deepEqual(original, {plugins: {}});
+});
+test('catalog startup task is removed without changing input', () => {
+    const original = {plugins: {}, startupTask: {key: 'Kartenkatalog'}};
+    const config = adaptConfig(original);
+    assert.equal(Object.hasOwn(config, 'startupTask'), false);
+    assert.deepEqual(original.startupTask, {key: 'Kartenkatalog'});
+});
+test('unrelated startup tasks and their options are preserved', () => {
+    const original = {plugins: {}, startupTask: {key: 'LayerTree', mode: 'example'}};
+    const config = adaptConfig(original);
+    assert.deepEqual(config.startupTask, original.startupTask);
+    assert.notEqual(config.startupTask, original.startupTask);
+});
 test('allowlist blocks writes and authentication', () => {
     assert.ok(allowed(new URL('https://localhost/ows/somap?REQUEST=GetMap'), 'GET'));
     for (const [route, method] of [['/api/data/v1/x', 'POST'], ['/auth/info', 'GET'], ['/ows/somap?request=Transaction', 'GET'], ['/api/dataproduct/v1/private', 'GET']]) assert.equal(allowed(new URL(route, 'https://localhost'), method), false);

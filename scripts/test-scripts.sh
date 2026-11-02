@@ -37,6 +37,18 @@ grep -q 'up -d --no-build --pull never --wait' "$COMMAND_LOG"
 "$repo_dir/scripts/down.sh"
 grep -q ' down$' "$COMMAND_LOG"
 : > "$COMMAND_LOG"
+"$repo_dir/scripts/up.sh" --catalog-only > "$scratch/output"
+grep -q 'pull kartenkatalog$' "$COMMAND_LOG"
+grep -q 'up .*--no-deps .*kartenkatalog$' "$COMMAND_LOG"
+! grep -q 'port qwc\|build qwc\| pull$' "$COMMAND_LOG"
+! grep -q 'Web GIS Client:' "$scratch/output"
+: > "$COMMAND_LOG"
+if "$repo_dir/scripts/up.sh" --catalog-only --local-qwc 2>/dev/null; then exit 1; fi
+[[ ! -s "$COMMAND_LOG" ]]
+"$repo_dir/scripts/down.sh" --catalog-only
+grep -q 'stop kartenkatalog$' "$COMMAND_LOG"
+! grep -q ' down$' "$COMMAND_LOG"
+: > "$COMMAND_LOG"
 export TEST_XTF="$scratch/missing.xtf"
 if "$repo_dir/scripts/up.sh" 2>/dev/null; then exit 1; fi
 ! grep -q ' pull' "$COMMAND_LOG"

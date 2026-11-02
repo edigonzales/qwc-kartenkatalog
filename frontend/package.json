@@ -51,7 +51,7 @@
         "build": "npm run prod",
         "analyze": "webpack --mode production --progress --env ANALYZE=1",
         "release": "node -e \"process.exit(require('os').platform() === 'win32' ? 0 : 1)\" && qwc2\\scripts\\package-commands.bat release || ./qwc2/scripts/package-commands.sh release",
-        "start:remote": "npm run tsupdate && npm run iconfont && webpack serve --mode development --env REMOTE=1 --host 127.0.0.1 --port 8082",
+        "start:remote": "npm run tsupdate && npm run iconfont && webpack serve --mode development --env REMOTE=1 --host 127.0.0.1",
         "test:remote": "node --test dev/*.test.cjs dev/*.test.mjs server/*.test.cjs",
         "lint:catalog": "eslint js/plugins/Kartenkatalog.jsx js/plugins/kartenkatalog/qwc.js js/plugins/kartenkatalog/*.mjs",
         "build:remote": "npm run tsupdate && npm run iconfont && webpack --mode production --env REMOTE=1"

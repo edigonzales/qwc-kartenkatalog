@@ -6,6 +6,9 @@
     "start:remote": "npm --prefix frontend run start:remote",
     "start": "npm --prefix frontend start",
     "test": "npm --prefix frontend run test:remote",
-    "lint:catalog": "npm --prefix frontend run lint:catalog"
+    "lint:catalog": "npm --prefix frontend run lint:catalog",
+    "dev": "node scripts/dev.cjs",
+    "catalog:up": "bash scripts/up.sh --catalog-only",
+    "catalog:stop": "bash scripts/down.sh --catalog-only"
   }
 }

@@ -1,6 +1,12 @@
 # Kartenkatalog-Plugin
 
-Das Plugin ist Teil des lokalen QWC-Builds und über **Karte & Werkzeuge → Kartenkatalog** erreichbar. Im Live-Dev-Modus öffnet es sich beim Start links. Themen zum Aufklappen, Ebenenlisten und Beschreibungen folgen dem Aufbau des Kartenkatalogs; Fenster, Eingabefeld, Icons, Ladeanzeige, Buttons und Farben verwenden die vorhandenen QWC-Komponenten und CSS-Variablen. Es gibt kein zusätzliches UI-Toolkit.
+Das Plugin ist Teil des lokalen QWC-Builds und über **Karte & Werkzeuge → Kartenkatalog** erreichbar. Beim Kartenstart bleibt es geschlossen; beim manuellen Öffnen erscheint es rechts wie „Layers & Legends“, sowohl auf dem Desktop als auch in der Mobilansicht. Dies gilt für Container und Live-Dev-Modus. Themen zum Aufklappen, Ebenenlisten und Beschreibungen folgen dem Aufbau des Kartenkatalogs; Fenster, Eingabefeld, Icons, Ladeanzeige, Buttons und Farben verwenden die vorhandenen QWC-Komponenten und CSS-Variablen. Es gibt kein zusätzliches UI-Toolkit.
+
+## Entwicklung mit Hot Reload
+
+Nach `npm run setup` startet `npm run dev` das veröffentlichte Backend in Docker und die lokale QWC-App einschliesslich Plugin mit Webpack. Ein laufender QWC-Container dieses Projekts wird dafür gestoppt. JavaScript-/JSX- und CSS-Änderungen erscheinen automatisch im Browser; Webpack verwendet HMR oder lädt die Seite neu. Ein Erhalt von Suche, offenen Themen oder anderem React-Zustand ist nicht garantiert.
+
+Strg+C beendet nur den Dev-Server. `npm run catalog:up` und `npm run catalog:stop` steuern das Backend einzeln. Ports und XTF werden beim gemeinsamen Dev-Start über Compose aus `.env` beziehungsweise der Shell übernommen; siehe [Entwicklungsablauf](../README.md#entwicklung-ohne-container). Änderungen an Middleware oder Webpack-Konfiguration benötigen einen Neustart des Dev-Servers. Backend-Quellcode wird in diesem Ablauf nicht automatisch neu geladen.
 
 ## Daten und Bedienung
 
