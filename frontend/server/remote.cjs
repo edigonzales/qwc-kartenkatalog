@@ -22,7 +22,7 @@ function adaptConfig(input) {
     for (const device of ['desktop', 'mobile']) {
         const plugins = config.plugins[device] ||= [];
         if (!plugins.some(plugin => plugin.name === 'Kartenkatalog')) {
-            plugins.push({name: 'Kartenkatalog', cfg: {catalogUrl: '/catalog-api/v1/catalog', width: '32em'}});
+            plugins.push({name: 'Kartenkatalog', cfg: {catalogUrl: '/catalog-api/v1/catalog', width: '48em'}});
         }
         const topbar = plugins.find(plugin => plugin.name === 'TopBar');
         if (topbar) {
