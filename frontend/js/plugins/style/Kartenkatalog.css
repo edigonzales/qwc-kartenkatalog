@@ -5,10 +5,11 @@
     max-height: calc(100vh - 8em);
     background: var(--container-bg-color);
     color: var(--text-color);
+    font-size: 14px;
 }
 #Kartenkatalog .kartenkatalog-search { padding: 0.75em; border-bottom: 1px solid var(--border-color); }
 #Kartenkatalog .input-container { width: 100%; }
-#Kartenkatalog .kartenkatalog-count { margin-top: 0.5em; font-size: 0.85em; color: var(--text-color); }
+#Kartenkatalog .kartenkatalog-count { margin-top: 0.5em; font-size: small; color: var(--text-color); }
 #Kartenkatalog .kartenkatalog-themes { overflow: auto; min-height: 0; background: var(--list-bg-color); }
 #Kartenkatalog details { border-bottom: 1px solid var(--border-color); }
 #Kartenkatalog summary {
@@ -24,8 +25,8 @@
 #Kartenkatalog summary:hover { background: var(--list-item-bg-color-hover); }
 #Kartenkatalog summary:focus-visible, #Kartenkatalog button:focus-visible { outline: var(--focus-outline); outline-offset: -2px; }
 #Kartenkatalog .kartenkatalog-theme-title { font-weight: bold; }
-#Kartenkatalog .kartenkatalog-badge { border: 1px solid var(--border-color); padding: 0 0.4em; border-radius: 0.2em; font-size: 0.85em; }
-#Kartenkatalog .kartenkatalog-theme-description { grid-column: 2 / -1; font-size: 0.85em; }
+#Kartenkatalog .kartenkatalog-badge { border: 1px solid var(--border-color); padding: 0 0.4em; border-radius: 0.2em; font-size: small; }
+#Kartenkatalog .kartenkatalog-theme-description { grid-column: 2 / -1; }
 #Kartenkatalog .kartenkatalog-theme-description, #Kartenkatalog .kartenkatalog-layer-description {
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -53,7 +54,7 @@
 #Kartenkatalog .kartenkatalog-text-button:hover { text-decoration: underline; }
 #Kartenkatalog .kartenkatalog-layer-title { font-weight: bold; overflow-wrap: anywhere; }
 #Kartenkatalog .kartenkatalog-add { display: inline-flex; align-items: center; gap: 0.35em; white-space: nowrap; margin: 0; }
-#Kartenkatalog .kartenkatalog-layer-description { grid-column: 1 / -1; margin: 0.25em 0 0; font-size: 0.85em; }
+#Kartenkatalog .kartenkatalog-layer-description { grid-column: 1 / -1; margin: 0.25em 0 0; }
 #Kartenkatalog .kartenkatalog-error { grid-column: 1 / -1; margin: 0.3em 0; border-left: 3px solid var(--border-color); padding-left: 0.5em; }
 #Kartenkatalog .spinner { width: 1em; height: 1em; margin-right: 0.3em; }
 #Kartenkatalog .kartenkatalog-loading, #Kartenkatalog .kartenkatalog-empty { padding: 1em; }
