@@ -28,3 +28,5 @@ Es gibt keinen automatischen Upstream-Pull. Root und Frontend sind keine npm-Wor
 ## Container
 
 Der Root-`Dockerfile` baut den eigenständigen anonymen QWC-Container. `frontend/Dockerfile` bleibt der unveränderte Upstream-Ansatz für `sourcepole/qwc-map-viewer-base` mit bereits vorhandenem `prod/`; er wird weder von Compose noch von der neuen Pipeline verwendet.
+
+Die Docker-Build-Stufe verwendet `BUILDPLATFORM`: Webpack, Übersetzungen und Iconfont erzeugen plattformunabhängige Assets auf der nativen Builder-Architektur. Nur die schlanke Node-Laufzeit wird für die jeweiligen Zielplattformen gebaut; npm und Webpack müssen dadurch nicht unter QEMU laufen.
