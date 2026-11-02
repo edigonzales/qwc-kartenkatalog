@@ -1,0 +1,75 @@
+#Kartenkatalog .kartenkatalog-body {
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+    max-height: calc(100vh - 8em);
+    background: var(--container-bg-color);
+    color: var(--text-color);
+}
+#Kartenkatalog .kartenkatalog-search { padding: 0.75em; border-bottom: 1px solid var(--border-color); }
+#Kartenkatalog .input-container { width: 100%; }
+#Kartenkatalog .kartenkatalog-count { margin-top: 0.5em; font-size: 0.85em; color: var(--text-color); }
+#Kartenkatalog .kartenkatalog-themes { overflow: auto; min-height: 0; background: var(--list-bg-color); }
+#Kartenkatalog details { border-bottom: 1px solid var(--border-color); }
+#Kartenkatalog summary {
+    display: grid;
+    grid-template-columns: 1em 1fr auto;
+    align-items: start;
+    gap: 0.4em;
+    padding: 0.75em;
+    cursor: pointer;
+    list-style: none;
+}
+#Kartenkatalog summary::-webkit-details-marker { display: none; }
+#Kartenkatalog summary:hover { background: var(--list-item-bg-color-hover); }
+#Kartenkatalog summary:focus-visible, #Kartenkatalog button:focus-visible { outline: var(--focus-outline); outline-offset: -2px; }
+#Kartenkatalog .kartenkatalog-theme-title { font-weight: bold; }
+#Kartenkatalog .kartenkatalog-badge { border: 1px solid var(--border-color); padding: 0 0.4em; border-radius: 0.2em; font-size: 0.85em; }
+#Kartenkatalog .kartenkatalog-theme-description { grid-column: 2 / -1; font-size: 0.85em; }
+#Kartenkatalog .kartenkatalog-theme-description, #Kartenkatalog .kartenkatalog-layer-description {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+#Kartenkatalog .kartenkatalog-theme-content { padding: 0 0.75em 0.5em; }
+#Kartenkatalog .kartenkatalog-layer {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    align-items: center;
+    gap: 0.35em;
+    border-top: 1px solid var(--border-color);
+    padding: 0.6em 0;
+}
+#Kartenkatalog .kartenkatalog-text-button, #Kartenkatalog .kartenkatalog-icon-button {
+    background: none;
+    border: none;
+    color: inherit;
+    padding: 0.25em;
+    cursor: pointer;
+    font: inherit;
+    text-align: left;
+}
+#Kartenkatalog .kartenkatalog-text-button:hover { text-decoration: underline; }
+#Kartenkatalog .kartenkatalog-layer-title { font-weight: bold; overflow-wrap: anywhere; }
+#Kartenkatalog .kartenkatalog-add { display: inline-flex; align-items: center; gap: 0.35em; white-space: nowrap; margin: 0; }
+#Kartenkatalog .kartenkatalog-layer-description { grid-column: 1 / -1; margin: 0.25em 0 0; font-size: 0.85em; }
+#Kartenkatalog .kartenkatalog-error { grid-column: 1 / -1; margin: 0.3em 0; border-left: 3px solid var(--border-color); padding-left: 0.5em; }
+#Kartenkatalog .spinner { width: 1em; height: 1em; margin-right: 0.3em; }
+#Kartenkatalog .kartenkatalog-loading, #Kartenkatalog .kartenkatalog-empty { padding: 1em; }
+#Kartenkatalog .kartenkatalog-detail { overflow: auto; padding: 0.75em; }
+#Kartenkatalog .kartenkatalog-detail h3 { margin: 1em 0 0.6em; overflow-wrap: anywhere; }
+#Kartenkatalog .kartenkatalog-detail-action { margin-bottom: 0.75em; }
+#Kartenkatalog .kartenkatalog-description { line-height: 1.5; overflow-wrap: anywhere; }
+#Kartenkatalog .kartenkatalog-description a { color: var(--text-color); text-decoration: underline; }
+#Kartenkatalog .kartenkatalog-detail dl { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 0.5em 1em; margin: 1em 0; }
+#Kartenkatalog .kartenkatalog-detail dt { font-weight: bold; }
+#Kartenkatalog .kartenkatalog-detail dd { margin: 0; overflow-wrap: anywhere; }
+#Kartenkatalog .kartenkatalog-terms h4 { margin-bottom: 0.4em; }
+#Kartenkatalog .kartenkatalog-terms ul { display: flex; flex-wrap: wrap; gap: 0.4em; list-style: none; padding: 0; }
+#Kartenkatalog .kartenkatalog-terms li { border: 1px solid var(--border-color); padding: 0.2em 0.4em; }
+@media (max-width: 600px) {
+    #Kartenkatalog .kartenkatalog-add span:not(.icon) { display: none; }
+    #Kartenkatalog .kartenkatalog-detail .kartenkatalog-add span:not(.icon) { display: inline; }
+    #Kartenkatalog .kartenkatalog-detail dl { grid-template-columns: 1fr; }
+}

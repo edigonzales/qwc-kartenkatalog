@@ -1,0 +1,11 @@
+{
+  "name": "qwc-kartenkatalog",
+  "private": true,
+  "scripts": {
+    "setup": "npm --prefix frontend ci",
+    "start:remote": "npm --prefix frontend run start:remote",
+    "start": "npm --prefix frontend start",
+    "test": "npm --prefix frontend run test:remote",
+    "lint:catalog": "npm --prefix frontend run lint:catalog"
+  }
+}

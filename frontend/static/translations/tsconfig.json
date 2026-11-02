@@ -1,0 +1,59 @@
+{
+  "languages": [
+    "de-CH",
+    "en-US"
+  ],
+  "strings": [
+    "appmenu.items.LandRegisterExtract",
+    "appmenu.menulabel",
+    "ccc.cancel",
+    "ccc.commit",
+    "ccc.configError",
+    "ccc.connError",
+    "ccc.connecting",
+    "ccc.createObject",
+    "ccc.deselect",
+    "ccc.editObject",
+    "ccc.reconnecting",
+    "ccc.sessionnr",
+    "ccc.showObject",
+    "layertree.printlegend",
+    "map.resetrotation",
+    "print.grid",
+    "print.layout",
+    "print.nolayouts",
+    "print.resolution",
+    "print.rotation",
+    "print.scale",
+    "print.submit",
+    "print.wait",
+    "sobottombar.contact",
+    "sobottombar.help",
+    "sotopbar.leave",
+    "sotopbar.unknownidentity"
+  ],
+  "extra_strings": [
+    "appmenu.items.LandRegisterExtract",
+    "appmenu.items.LegendPrint",
+    "search.coordinates",
+    "appmenu.items.Kartenkatalog"
+  ],
+  "overrides": [
+    "appmenu.items.LayerTree",
+    "appmenu.items.MeasureLineString",
+    "appmenu.items.PlotInfoTool_comment",
+    "appmenu.items.Login",
+    "appmenu.items.Logout",
+    "oereb.failed",
+    "bottombar.viewertitle_label",
+    "editing.layer",
+    "editing.noeditablelayers",
+    "editing.draw",
+    "importlayer.addlayer",
+    "layerinfo.title",
+    "layertree.compare",
+    "layertree.importlayer",
+    "redlining.layer",
+    "redlining.markers"
+  ]
+}
