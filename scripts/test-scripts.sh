@@ -7,7 +7,11 @@ trap 'rm -rf "$scratch"' EXIT
 cat > "$scratch/docker" <<'MOCK'
 #!/usr/bin/env bash
 printf '%s\n' "$*" >> "$COMMAND_LOG"
-case "$*" in *'config --environment') echo "CATALOG_XTF_PATH=${TEST_XTF}" ;; esac
+case "$*" in
+  *'config --environment') echo "CATALOG_XTF_PATH=${TEST_XTF}" ;;
+  *'port qwc 8080') echo "127.0.0.1:${QWC_PORT:-8082}" ;;
+  *'port kartenkatalog 8080') echo "127.0.0.1:${CATALOG_PORT:-8083}" ;;
+esac
 MOCK
 chmod +x "$scratch/docker"
 export PATH="$scratch:$PATH" COMMAND_LOG="$scratch/commands" TEST_XTF="$repo_dir/data/kartenkatalog-harvest-ohne-qml.xtf"
@@ -17,11 +21,15 @@ cd "$scratch"
 [[ ! -f "$COMMAND_LOG" ]]
 if "$repo_dir/scripts/up.sh" --bogus 2>/dev/null; then exit 1; fi
 if "$repo_dir/scripts/down.sh" --local-qwc 2>/dev/null; then exit 1; fi
-"$repo_dir/scripts/up.sh" > /dev/null
+QWC_PORT=8082 CATALOG_PORT=8083 "$repo_dir/scripts/up.sh" > "$scratch/output"
+grep -q 'Web GIS Client: http://127.0.0.1:8082/map/' "$scratch/output"
+grep -q 'Kartenkatalog:  http://127.0.0.1:8083/thema' "$scratch/output"
 grep -q ' pull$' "$COMMAND_LOG"
 ! grep -q ' build ' "$COMMAND_LOG"
 : > "$COMMAND_LOG"
-"$repo_dir/scripts/up.sh" --local-qwc > /dev/null
+QWC_PORT=18082 CATALOG_PORT=18083 "$repo_dir/scripts/up.sh" --local-qwc > "$scratch/output"
+grep -q 'Web GIS Client: http://127.0.0.1:18082/map/' "$scratch/output"
+grep -q 'Kartenkatalog:  http://127.0.0.1:18083/thema' "$scratch/output"
 grep -q 'pull kartenkatalog$' "$COMMAND_LOG"
 grep -q 'build qwc$' "$COMMAND_LOG"
 ! grep -q ' pull$' "$COMMAND_LOG"

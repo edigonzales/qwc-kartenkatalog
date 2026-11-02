@@ -32,4 +32,6 @@ else
 fi
 "${compose[@]}" up -d --no-build --pull never --wait --wait-timeout 180
 "${compose[@]}" ps
-echo 'QWC: /map/ and backend: /thema on the host ports shown above.'
+qwc_address="$("${compose[@]}" port qwc 8080)"
+catalog_address="$("${compose[@]}" port kartenkatalog 8080)"
+printf '\nWeb GIS Client: http://%s/map/\nKartenkatalog:  http://%s/thema\n' "$qwc_address" "$catalog_address"
