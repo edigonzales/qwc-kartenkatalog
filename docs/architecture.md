@@ -1,14 +1,14 @@
 # Architektur
 
-Dieses Repo besitzt die Solothurn-QWC-App unter `frontend/`, die lokale Live-Anbindung und das Kartenkatalog-Plugin. Die bestehende Java-21-/Spring-Boot-App bleibt in `edigonzales/kartenkatalog`, einschliesslich ihrer Datenbankanbindung und ihres eigenständigen Deployments. Es gibt keine zweite Kopie des Backends und keine Submodule.
+Dieses Repo besitzt die Solothurn-QWC-App unter `frontend/`, die lokale Live-Anbindung und das Kartenkatalog-Plugin. Die Java-21-/Quarkus-App bleibt in `edigonzales/kartenkatalog`, mit ihrer XTF-Datenquelle und dem Suchindex im RAM und ihres eigenständigen Deployments. Es gibt keine zweite Kopie des Backends und keine Submodule.
 
-Das Plugin ist als Build-Time-Komponente in der QWC-App registriert. Es bezieht fachliche Themen, Beschreibungen, Schlagwörter und Synonyme über eine konfigurierbare URL aus der Spring-Boot-JSON-API. Es verwendet den versionierten vollständigen Katalog unter `/api/v1/catalog`; der Dev-Server stellt ihn unter `/catalog-api/v1/catalog` bereit.
+Das Plugin ist als Build-Time-Komponente in der QWC-App registriert. Es bezieht fachliche Themen, Beschreibungen, Schlagwörter und Synonyme über eine konfigurierbare URL aus der Quarkus-JSON-API. Es verwendet den versionierten vollständigen Katalog unter `/api/v1/catalog`; Dev-Server und Container stellen ihn unter `/catalog-api/v1/catalog` bereit.
 
 Katalog-Themen sind fachliche Kategorien, keine QWC-Themen. Die vorhandene Default-Karte bleibt technische Grundlage. Interne Ebenen werden über QWC-State, Actions und die vorhandene Nachlademechanik verwaltet; das eingebaute LayerCatalog ersetzt nicht das eigene Plugin.
 
 ## Lokale Datenwege
 
-Browser → lokaler Webpack-Server → `https://geo.so.ch`:
+Browser → lokaler Webpack-Server oder Container-HTTP-Server → `https://geo.so.ch`:
 
 - `/map/config.json`: Live-Konfiguration mit anonymem Dev-Overlay.
 - `/map/themes.json`: Live-Themen; absolute Solothurn-WMTS-URLs werden relativ auf den Proxy umgestellt.
@@ -30,3 +30,7 @@ Das Live-Default-Thema lieferte bei der Einrichtung am 30.10.2026 keine Sublayer
 Das unverändert übernommene npm-Lockfile enthält veraltete Abhängigkeiten und npm-Audit-Befunde. Diese werden nicht durch ein automatisches, potentiell inkompatibles Dependency-Upgrade verändert; ein späteres Upstream-Update muss sie berücksichtigen.
 
 Die konkrete Komponentenwahl, Layer-Actions und die Besonderheit externer Dienste im Theme-Layer sind in [plugin.md](plugin.md) beschrieben.
+
+## Containerbetrieb
+
+Compose startet QWC und das separat veröffentlichte Quarkus-JVM-Image. Der optimierte QWC-Build und der Dev-Server verwenden dieselbe Middleware aus `frontend/server/remote.cjs`. Im Container zeigt `CATALOG_API_ORIGIN` auf `http://kartenkatalog:8080`; es gibt keine CORS-Freigabe zwischen Browser und Backend. Die XTF wird ausschliesslich schreibgeschützt ins Backend gemountet. QWC-Readiness unter `/healthz` setzt Backend-Readiness voraus, Live-Dienste bleiben eine externe Abhängigkeit.

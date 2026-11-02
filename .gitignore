@@ -5,3 +5,5 @@ frontend/dist/
 frontend/icons/build/
 frontend/themes.json
 npm-debug.log*
+
+.env

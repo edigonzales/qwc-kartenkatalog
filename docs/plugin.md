@@ -1,10 +1,10 @@
 # Kartenkatalog-Plugin
 
-Das Plugin ist Teil des lokalen QWC-Builds und über **Karte & Werkzeuge → Kartenkatalog** erreichbar. Im Live-Dev-Modus öffnet es sich beim Start links. Themen zum Aufklappen, Ebenenlisten und Beschreibungen folgen dem Aufbau des Spring-Boot-Katalogs; Fenster, Eingabefeld, Icons, Ladeanzeige, Buttons und Farben verwenden die vorhandenen QWC-Komponenten und CSS-Variablen. Es gibt kein zusätzliches UI-Toolkit.
+Das Plugin ist Teil des lokalen QWC-Builds und über **Karte & Werkzeuge → Kartenkatalog** erreichbar. Im Live-Dev-Modus öffnet es sich beim Start links. Themen zum Aufklappen, Ebenenlisten und Beschreibungen folgen dem Aufbau des Kartenkatalogs; Fenster, Eingabefeld, Icons, Ladeanzeige, Buttons und Farben verwenden die vorhandenen QWC-Komponenten und CSS-Variablen. Es gibt kein zusätzliches UI-Toolkit.
 
 ## Daten und Bedienung
 
-`GET /catalog-api/v1/catalog` lädt den vollständigen Katalog aus der Spring-Boot-API. Die Dev-Middleware leitet diesen festen Lesepfad nach `http://127.0.0.1:8083/api/v1/catalog` weiter. Mit `CATALOG_API_ORIGIN=http://127.0.0.1:8080 npm run start:remote` lässt sich ein anderer Backend-Port verwenden. Der Proxy reicht keine Cookies weiter und erlaubt weder andere Backend-Routen noch Schreibmethoden.
+`GET /catalog-api/v1/catalog` lädt den vollständigen Katalog aus der Quarkus-API. Die gemeinsame Middleware für Dev-Server und Container leitet diesen festen Lesepfad nach `http://127.0.0.1:8083/api/v1/catalog` weiter. Mit `CATALOG_API_ORIGIN=http://127.0.0.1:8080 npm run start:remote` lässt sich ein anderer Backend-Port verwenden. Der Proxy reicht keine Cookies weiter und erlaubt weder andere Backend-Routen noch Schreibmethoden.
 
 Der Katalog bleibt pro App-Sitzung im Browser. Die Suche arbeitet lokal über Kennung, Titel, Beschreibung, Schlagwörter und Synonyme sowie die Themenmetadaten. Mehrere Suchwörter werden kombiniert; Grossschreibung und Akzente sind unerheblich. Passende Themen öffnen sich automatisch. Ohne Treffer erscheint ein Leerzustand. Bei API-Fehlern bleibt die Karte nutzbar und der Katalog bietet einen erneuten Ladeversuch an.
 
@@ -16,7 +16,7 @@ Die Hinzufügen-Aktion lädt die aktuelle QWC-Definition nach und zeigt einen La
 
 - `frontend/js/plugins/Kartenkatalog.jsx`: React-Oberfläche mit QWC `SideBar`, `InputContainer`, `Icon`, `Spinner` und QWC-Buttons. Die Datenquelle ist über die Plugin-Option `catalogUrl` konfigurierbar.
 - `frontend/js/plugins/kartenkatalog/`: Katalogindex/Suche, zustandsabhängige Layerauflösung und der schmale QWC-Adapter. Suche und Duplikatbehandlung lassen sich ohne Browser testen.
-- `frontend/dev/remote.cjs`: ausschliesslich die lokale Proxy-/Konfigurationsanpassung. Die Registrierung der React-Komponente selbst erfolgt wie bei den anderen Plugins in `js/appConfig.js`.
+- `frontend/server/remote.cjs`: gemeinsame Proxy-/Konfigurationsanpassung; `frontend/dev/remote.cjs` ist der Kompatibilitätseinstieg für Webpack. Die Registrierung der React-Komponente selbst erfolgt wie bei den anderen Plugins in `js/appConfig.js`.
 
 ### Weshalb addThemeSublayer?
 

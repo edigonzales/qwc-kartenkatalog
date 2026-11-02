@@ -1,0 +1,9 @@
+.git
+.github
+.env
+**/node_modules
+frontend/prod
+frontend/dist
+frontend/icons/build
+frontend/themes.json
+**/.DS_Store

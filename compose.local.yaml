@@ -1,0 +1,7 @@
+services:
+  qwc:
+    image: qwc-kartenkatalog:local
+    pull_policy: never
+    build:
+      context: .
+      dockerfile: Dockerfile

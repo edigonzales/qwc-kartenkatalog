@@ -1,0 +1,34 @@
+name: qwc-kartenkatalog
+services:
+  kartenkatalog:
+    image: ${CATALOG_IMAGE:-sogis/kartenkatalog:0.2.75-jvm}
+    platform: linux/amd64
+    environment:
+      CATALOG_XTF_LOCATION: file:/catalog/catalog.xtf
+    volumes:
+      - type: bind
+        source: ${CATALOG_XTF_PATH:-./data/kartenkatalog-harvest-ohne-qml.xtf}
+        target: /catalog/catalog.xtf
+        read_only: true
+        bind:
+          create_host_path: false
+    ports:
+      - "127.0.0.1:${CATALOG_PORT:-8083}:8080"
+    read_only: true
+    tmpfs:
+      - /tmp:rw,noexec,nosuid,size=64m,mode=1777
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    restart: unless-stopped
+  qwc:
+    image: ${QWC_IMAGE:-sogis/qwc-kartenkatalog:latest}
+    environment:
+      CATALOG_API_ORIGIN: http://kartenkatalog:8080
+    depends_on:
+      - kartenkatalog
+    ports:
+      - "127.0.0.1:${QWC_PORT:-8082}:8080"
+    read_only: true
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    restart: unless-stopped

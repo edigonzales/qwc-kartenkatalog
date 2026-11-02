@@ -12,7 +12,7 @@ Die BSD-Lizenz und Copyright-Hinweise bleiben in `frontend/LICENSE` und den Quel
 - App-Bootstrap: anonymer Start nur im Remote-Modus.
 - HTML: Analytics nur ausserhalb des Remote-Modus.
 - npm: zusätzlicher Remote-Start und Tests; Root-Befehle delegieren ins Frontend.
-- `dev/`: öffentliche Live-Anbindung, lokaler Katalog-Proxy, Konfigurationsadapter und Tests.
+- `server/`: gemeinsame öffentliche Live-Anbindung, Katalog-Proxy und Konfigurationsadapter für Dev-Server und Container; Tests unter `dev/` und `server/`.
 - Eigenes Kartenkatalog-Plugin mit nativen QWC-Komponenten und dessen Build-Time-Registrierung.
 
 ## Bewusstes Update
@@ -24,3 +24,7 @@ Die BSD-Lizenz und Copyright-Hinweise bleiben in `frontend/LICENSE` und den Quel
 5. Commit und QWC-Version in diesem Dokument aktualisieren.
 
 Es gibt keinen automatischen Upstream-Pull. Root und Frontend sind keine npm-Workspaces; das Frontend besitzt sein eigenes Lockfile.
+
+## Container
+
+Der Root-`Dockerfile` baut den eigenständigen anonymen QWC-Container. `frontend/Dockerfile` bleibt der unveränderte Upstream-Ansatz für `sourcepole/qwc-map-viewer-base` mit bereits vorhandenem `prod/`; er wird weder von Compose noch von der neuen Pipeline verwendet.
