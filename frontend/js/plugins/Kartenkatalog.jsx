@@ -8,19 +8,42 @@ import Icon from 'qwc2/components/Icon';
 import SideBar from 'qwc2/components/SideBar';
 import InputContainer from 'qwc2/components/widgets/InputContainer';
 import Spinner from 'qwc2/components/widgets/Spinner';
+import LocaleUtils from 'qwc2/utils/LocaleUtils';
 
 import {filterCatalog, prepareCatalog, safeLink} from './kartenkatalog/catalog.mjs';
+import {errorCode} from './kartenkatalog/errors.mjs';
 import {createQwcLayerController} from './kartenkatalog/qwc';
 
 import './style/Kartenkatalog.css';
 
-const typeLabel = type => ({layergroup: 'Layergruppe', extwms: 'Externer WMS', facadelayer: 'Kartenebene', datasetview: 'Kartenebene'}[type] || 'Kartenebene');
-const statusLabel = status => ({visible: 'In Karte', hidden: 'Aktivieren', partial: 'Vervollständigen', missing: 'Hinzufügen'}[status]);
+const typeLabel = type => ({
+    layergroup: LocaleUtils.tr('kartenkatalog.types.group'),
+    extwms: LocaleUtils.tr('kartenkatalog.types.externalWms')
+}[type] || LocaleUtils.tr('kartenkatalog.types.layer'));
+const statusLabel = status => ({
+    visible: LocaleUtils.tr('kartenkatalog.status.visible'),
+    hidden: LocaleUtils.tr('kartenkatalog.status.hidden'),
+    partial: LocaleUtils.tr('kartenkatalog.status.partial'),
+    missing: LocaleUtils.tr('kartenkatalog.status.missing')
+}[status]);
+const errorLabel = code => ({
+    catalogInvalid: LocaleUtils.tr('kartenkatalog.errors.catalogInvalid'),
+    themesInvalid: LocaleUtils.tr('kartenkatalog.errors.themesInvalid'),
+    layersInvalid: LocaleUtils.tr('kartenkatalog.errors.layersInvalid'),
+    catalogUnavailable: LocaleUtils.tr('kartenkatalog.errors.catalogUnavailable'),
+    catalogTimeout: LocaleUtils.tr('kartenkatalog.errors.catalogTimeout'),
+    catalogLoadFailed: LocaleUtils.tr('kartenkatalog.errors.catalogLoadFailed'),
+    mapNotReady: LocaleUtils.tr('kartenkatalog.errors.mapNotReady'),
+    layerUnavailable: LocaleUtils.tr('kartenkatalog.errors.layerUnavailable'),
+    themeChanged: LocaleUtils.tr('kartenkatalog.errors.themeChanged'),
+    serviceTimeout: LocaleUtils.tr('kartenkatalog.errors.serviceTimeout'),
+    definitionsFailed: LocaleUtils.tr('kartenkatalog.errors.definitionsFailed')
+}[code] || LocaleUtils.tr('kartenkatalog.errors.addFailed'));
 
 function Description({item}) {
     const html = useMemo(() => DOMPurify.sanitize(item.descriptionHtml || ''), [item.descriptionHtml]);
     return html ? <div className="kartenkatalog-description" dangerouslySetInnerHTML={{__html: html}} /> :
-        item.description ? <p className="kartenkatalog-description">{item.description}</p> : <p>Keine Beschreibung vorhanden.</p>;
+        item.description ? <p className="kartenkatalog-description">{item.description}</p> : <p>{LocaleUtils.tr('kartenkatalog.noDescription')}</p>;
 }
 Description.propTypes = {item: PropTypes.object.isRequired};
 
@@ -29,7 +52,7 @@ function Terms({title, values}) {
 }
 Terms.propTypes = {title: PropTypes.string.isRequired, values: PropTypes.array};
 
-function Kartenkatalog({catalogUrl = '/catalog-api/v1/catalog', dispatch, layers, theme, themes, width = '32em'}) {
+function Kartenkatalog({catalogUrl = '/catalog-api/v1/catalog', dispatch, layers, theme, themes, width = '48em'}) {
     const [catalog, setCatalog] = useState(null);
     const [loading, setLoading] = useState(true);
     const [loadError, setLoadError] = useState(null);
@@ -53,8 +76,8 @@ function Kartenkatalog({catalogUrl = '/catalog-api/v1/catalog', dispatch, layers
         }).catch(error => {
             if (!abort.signal.aborted) {
                 setLoadError(error.response?.status === 502 ?
-                    'Der Kartenkatalog ist zurzeit nicht erreichbar. Bitte erneut versuchen.' :
-                    error.code === 'ECONNABORTED' ? 'Die Katalog-API antwortet nicht rechtzeitig.' : 'Der Kartenkatalog konnte nicht geladen werden.');
+                    'catalogUnavailable' :
+                    error.code === 'ECONNABORTED' ? 'catalogTimeout' : errorCode(error, 'catalogLoadFailed'));
             }
         }).finally(() => {
             if (!abort.signal.aborted) setLoading(false);
@@ -73,7 +96,7 @@ function Kartenkatalog({catalogUrl = '/catalog-api/v1/catalog', dispatch, layers
         try {
             await dispatch((dispatchAction, getState) => controller.add(entry, dispatchAction, getState));
         } catch (error) {
-            setErrors(previous => ({...previous, [name]: error.message || 'Die Kartenebene konnte nicht hinzugefügt werden.'}));
+            setErrors(previous => ({...previous, [name]: errorCode(error, 'addFailed')}));
         } finally {
             inFlight.current.delete(name);
             setBusy(previous => {
@@ -86,50 +109,52 @@ function Kartenkatalog({catalogUrl = '/catalog-api/v1/catalog', dispatch, layers
     const addButton = entry => {
         const pending = busy.has(entry.qwcLayerName);
         const status = controller.status(entry, state);
-        const label = pending ? 'Wird geladen …' : statusLabel(status);
-        return (<button aria-label={`${label}: ${entry.title}`} className="button kartenkatalog-add"
+        const label = pending ? LocaleUtils.tr('kartenkatalog.loadingLayer') : statusLabel(status);
+        return (<button aria-label={LocaleUtils.tr('kartenkatalog.layerAction', label, entry.title)} className="button kartenkatalog-add"
             disabled={pending || !theme || status === 'visible'} onClick={() => add(entry)} title={label} type="button">
             {pending ? <Spinner /> : <Icon icon={status === 'visible' ? 'checked' : status === 'hidden' ? 'unchecked' : 'plus'} />}
             <span>{label}</span>
         </button>);
     };
     const errorMessage = entry => errors[entry.qwcLayerName] ?
-        <p className="kartenkatalog-error" role="alert">{errors[entry.qwcLayerName]}</p> : null;
+        <p className="kartenkatalog-error" role="alert">{errorLabel(errors[entry.qwcLayerName])}</p> : null;
 
     const renderDetail = () => {
         const item = detail.layer || detail.theme;
         const moreInfo = safeLink(detail.theme.furtherInfoUrl);
         return (<div className="kartenkatalog-detail">
-            <button className="button" onClick={() => setDetail(null)} type="button"><Icon icon="chevron-left" /> Zurück zur Übersicht</button>
+            <button className="button" onClick={() => setDetail(null)} type="button"><Icon icon="chevron-left" /> {LocaleUtils.tr('kartenkatalog.back')}</button>
             <h3>{item.title}</h3>
             {detail.layer ? <div className="kartenkatalog-detail-action">{addButton(detail.layer)}{errorMessage(detail.layer)}</div> : null}
             <Description item={item} />
             <dl>
-                {detail.layer ? <><dt>Thema</dt><dd>{detail.theme.title}</dd><dt>Kennung</dt><dd><code>{item.qwcLayerName}</code></dd>
-                    <dt>Typ</dt><dd>{typeLabel(item.type)}</dd>
-                    {typeof item.transparency === 'number' ? <><dt>Vorgesehene Transparenz</dt><dd>{item.transparency} %</dd></> : null}
-                    {item.organization ? <><dt>Organisation</dt><dd>{item.organization}</dd></> : null}
-                    {item.publicationScope ? <><dt>Verfügbarkeit</dt><dd>{item.publicationScope}</dd></> : null}
-                    {typeof item.downloadAvailable === 'boolean' ? <><dt>Download</dt><dd>{item.downloadAvailable ? 'Möglich' : 'Nicht verfügbar'}</dd></> : null}
-                </> : <><dt>Kartenebenen</dt><dd>{detail.count}</dd></>}
-                {detail.theme.dataOwner ? <><dt>Zuständige Stelle</dt><dd>{detail.theme.dataOwner}</dd></> : null}
+                {detail.layer ? <><dt>{LocaleUtils.tr('kartenkatalog.fields.theme')}</dt><dd>{detail.theme.title}</dd><dt>{LocaleUtils.tr('kartenkatalog.fields.identifier')}</dt><dd><code>{item.qwcLayerName}</code></dd>
+                    <dt>{LocaleUtils.tr('kartenkatalog.fields.type')}</dt><dd>{typeLabel(item.type)}</dd>
+                    {typeof item.transparency === 'number' ? <><dt>{LocaleUtils.tr('kartenkatalog.fields.transparency')}</dt><dd>{item.transparency} %</dd></> : null}
+                    {item.organization ? <><dt>{LocaleUtils.tr('kartenkatalog.fields.organization')}</dt><dd>{item.organization}</dd></> : null}
+                    {item.publicationScope ? <><dt>{LocaleUtils.tr('kartenkatalog.fields.availability')}</dt><dd>{item.publicationScope}</dd></> : null}
+                    {typeof item.downloadAvailable === 'boolean' ? <><dt>{LocaleUtils.tr('kartenkatalog.fields.download')}</dt><dd>{item.downloadAvailable ? LocaleUtils.tr('kartenkatalog.downloadAvailable') : LocaleUtils.tr('kartenkatalog.downloadUnavailable')}</dd></> : null}
+                </> : <><dt>{LocaleUtils.tr('kartenkatalog.fields.layers')}</dt><dd>{detail.count}</dd></>}
+                {detail.theme.dataOwner ? <><dt>{LocaleUtils.tr('kartenkatalog.fields.dataOwner')}</dt><dd>{detail.theme.dataOwner}</dd></> : null}
             </dl>
-            <Terms title="Schlagwörter" values={item.keywords} />
-            <Terms title="Synonyme" values={item.synonyms} />
-            {moreInfo ? <p><a href={moreInfo} rel="noopener noreferrer" target="_blank">Weitere Informationen zum Thema <Icon icon="info" /></a></p> : null}
+            <Terms title={LocaleUtils.tr('kartenkatalog.keywords')} values={item.keywords} />
+            <Terms title={LocaleUtils.tr('kartenkatalog.synonyms')} values={item.synonyms} />
+            {moreInfo ? <p><a href={moreInfo} rel="noopener noreferrer" target="_blank">{LocaleUtils.tr('kartenkatalog.moreInfo')} <Icon icon="info" /></a></p> : null}
         </div>);
     };
     const renderList = () => (<>
         <div className="kartenkatalog-search">
             <InputContainer>
                 <span role="prefix"><Icon icon="search" /></span>
-                <input aria-label="Themen und Kartenebenen suchen" onChange={event => setQuery(event.target.value)}
-                    placeholder="Themen und Kartenebenen suchen …" role="input" type="search" value={query} />
-                {query ? <button aria-label="Suche löschen" className="kartenkatalog-icon-button" onClick={() => setQuery('')} role="suffix" type="button"><Icon icon="clear" /></button> : null}
+                <input aria-label={LocaleUtils.tr('kartenkatalog.searchLabel')} onChange={event => setQuery(event.target.value)}
+                    placeholder={LocaleUtils.tr('kartenkatalog.searchPlaceholder')} role="input" type="search" value={query} />
+                {query ? <button aria-label={LocaleUtils.tr('kartenkatalog.clearSearch')} className="kartenkatalog-icon-button" onClick={() => setQuery('')} role="suffix" type="button"><Icon icon="clear" /></button> : null}
             </InputContainer>
-            <div aria-live="polite" className="kartenkatalog-count">{count} {count === 1 ? 'Kartenebene' : 'Kartenebenen'} in {filtered.length} {filtered.length === 1 ? 'Thema' : 'Themen'}</div>
+            <div aria-live="polite" className="kartenkatalog-count">{LocaleUtils.tr('kartenkatalog.resultCount', count,
+                count === 1 ? LocaleUtils.tr('kartenkatalog.layerSingular') : LocaleUtils.tr('kartenkatalog.layerPlural'),
+                filtered.length, filtered.length === 1 ? LocaleUtils.tr('kartenkatalog.themeSingular') : LocaleUtils.tr('kartenkatalog.themePlural'))}</div>
         </div>
-        {!filtered.length ? <p className="kartenkatalog-empty">Keine passenden Themen oder Kartenebenen gefunden.</p> : null}
+        {!filtered.length ? <p className="kartenkatalog-empty">{LocaleUtils.tr('kartenkatalog.noResults')}</p> : null}
         <div className="kartenkatalog-themes">
             {filtered.map(entry => (<details key={entry.theme.identifier} onToggle={event => {
                 if (query.trim()) return;
@@ -149,11 +174,11 @@ function Kartenkatalog({catalogUrl = '/catalog-api/v1/catalog', dispatch, layers
                 </summary>
                 {query.trim() || expanded.has(entry.theme.identifier) ? (<div className="kartenkatalog-theme-content">
                     <button className="kartenkatalog-text-button" onClick={() => setDetail({theme: entry.theme, count: (catalog.find(e => e.theme.identifier === entry.theme.identifier)?.layers.length || 0)})} type="button">
-                        <Icon icon="info" /> Themeninformationen
+                        <Icon icon="info" /> {LocaleUtils.tr('kartenkatalog.themeInfo')}
                     </button>
                     {entry.layers.map(layer => (<div className="kartenkatalog-layer" key={layer.id}>
                         <button className="kartenkatalog-layer-title kartenkatalog-text-button" onClick={() => setDetail({theme: entry.theme, layer})} type="button">{layer.title}</button>
-                        <button aria-label={`Metadaten: ${layer.title}`} className="kartenkatalog-icon-button" onClick={() => setDetail({theme: entry.theme, layer})} title="Metadaten anzeigen" type="button"><Icon icon="info" /></button>
+                        <button aria-label={LocaleUtils.tr('kartenkatalog.metadataFor', layer.title)} className="kartenkatalog-icon-button" onClick={() => setDetail({theme: entry.theme, layer})} title={LocaleUtils.tr('kartenkatalog.showMetadata')} type="button"><Icon icon="info" /></button>
                         {addButton(layer)}
                         {layer.description ? <p className="kartenkatalog-layer-description">{layer.description}</p> : null}
                         {errorMessage(layer)}
@@ -162,10 +187,10 @@ function Kartenkatalog({catalogUrl = '/catalog-api/v1/catalog', dispatch, layers
             </details>))}
         </div>
     </>);
-    return (<SideBar icon="catalog" id="Kartenkatalog" minWidth="20em" side="right" title="Kartenkatalog" width={width}>
+    return (<SideBar icon="catalog" id="Kartenkatalog" minWidth="20em" side="right" title={LocaleUtils.tr('appmenu.items.Kartenkatalog')} width={width}>
         <div className="kartenkatalog-body" role="body">
-            {loading ? <div aria-live="polite" className="kartenkatalog-loading"><Spinner /> Kartenkatalog wird geladen …</div> :
-                loadError ? <div className="kartenkatalog-empty"><p role="alert">{loadError}</p><button className="button" onClick={() => setReload(value => value + 1)} type="button"><Icon icon="refresh" /> Erneut laden</button></div> :
+            {loading ? <div aria-live="polite" className="kartenkatalog-loading"><Spinner /> {LocaleUtils.tr('kartenkatalog.loadingCatalog')}</div> :
+                loadError ? <div className="kartenkatalog-empty"><p role="alert">{errorLabel(loadError)}</p><button className="button" onClick={() => setReload(value => value + 1)} type="button"><Icon icon="refresh" /> {LocaleUtils.tr('kartenkatalog.retry')}</button></div> :
                     detail ? renderDetail() : renderList()}
         </div>
     </SideBar>);
@@ -175,8 +200,10 @@ Kartenkatalog.propTypes = {
     catalogUrl: PropTypes.string,
     dispatch: PropTypes.func.isRequired,
     layers: PropTypes.array.isRequired,
+    locale: PropTypes.object,
     theme: PropTypes.object,
     themes: PropTypes.object,
     width: PropTypes.string
 };
-export default connect(state => ({layers: state.layers.flat, theme: state.theme.current, themes: state.theme.themes}))(Kartenkatalog);
+// Subscribe to locale changes so existing UI state and errors are translated again.
+export default connect(state => ({layers: state.layers.flat, locale: state.locale, theme: state.theme.current, themes: state.theme.themes}))(Kartenkatalog);

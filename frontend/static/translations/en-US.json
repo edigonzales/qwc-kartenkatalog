@@ -3,9 +3,9 @@
   "messages": {
     "appmenu": {
       "items": {
+        "Kartenkatalog": "Map catalog",
         "LandRegisterExtract": "Land Register Map Extract",
         "LegendPrint": "Print legend",
-        "Kartenkatalog": "Map catalog",
         "Bookmark": "Bookmarks",
         "Compare3D": "Compare",
         "Editing": "Editing",
@@ -73,6 +73,67 @@
       "reconnecting": "Attempting to reconnect...",
       "sessionnr": "Session nr: {0}",
       "showObject": "Object(s) selected"
+    },
+    "kartenkatalog": {
+      "back": "Back to overview",
+      "clearSearch": "Clear search",
+      "downloadAvailable": "Available",
+      "downloadUnavailable": "Unavailable",
+      "errors": {
+        "addFailed": "The map layer could not be added.",
+        "catalogInvalid": "The catalog API did not return a valid topic directory.",
+        "catalogLoadFailed": "The map catalog could not be loaded.",
+        "catalogTimeout": "The catalog API did not respond in time.",
+        "catalogUnavailable": "The map catalog is currently unavailable. Please try again.",
+        "definitionsFailed": "The layer definitions could not be loaded. Please try again.",
+        "layerUnavailable": "This map layer is not available in the current QWC project.",
+        "layersInvalid": "The catalog API contains invalid or duplicate map layers.",
+        "mapNotReady": "The map is not ready yet.",
+        "serviceTimeout": "The map service did not respond. Please try again.",
+        "themeChanged": "The map has changed. Please add the layer again.",
+        "themesInvalid": "The catalog API contains invalid or duplicate topics."
+      },
+      "fields": {
+        "availability": "Availability",
+        "dataOwner": "Responsible authority",
+        "download": "Download",
+        "identifier": "Identifier",
+        "layers": "Map layers",
+        "organization": "Organization",
+        "theme": "Topic",
+        "transparency": "Intended transparency",
+        "type": "Type"
+      },
+      "keywords": "Keywords",
+      "layerAction": "{0}: {1}",
+      "layerPlural": "map layers",
+      "layerSingular": "map layer",
+      "loadingCatalog": "Loading map catalog …",
+      "loadingLayer": "Loading …",
+      "metadataFor": "Metadata: {0}",
+      "moreInfo": "More information about this topic",
+      "noDescription": "No description available.",
+      "noResults": "No matching topics or map layers found.",
+      "resultCount": "{0} {1} in {2} {3}",
+      "retry": "Reload",
+      "searchLabel": "Search topics and map layers",
+      "searchPlaceholder": "Search topics and map layers …",
+      "showMetadata": "Show metadata",
+      "status": {
+        "hidden": "Activate",
+        "missing": "Add",
+        "partial": "Complete",
+        "visible": "In map"
+      },
+      "synonyms": "Synonyms",
+      "themeInfo": "Topic information",
+      "themePlural": "topics",
+      "themeSingular": "topic",
+      "types": {
+        "externalWms": "External WMS",
+        "group": "Layer group",
+        "layer": "Map layer"
+      }
     },
     "layertree": {
       "printlegend": "Print legend",

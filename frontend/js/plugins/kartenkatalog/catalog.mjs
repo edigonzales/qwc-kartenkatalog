@@ -1,20 +1,22 @@
+import {catalogError} from './errors.mjs';
+
 export function normalize(value = '') {
     return String(value ?? '').normalize('NFD').replace(/\p{M}/gu, '').toLocaleLowerCase('de-CH').replace(/ß/g, 'ss');
 }
 
 export function prepareCatalog(data) {
-    if (!Array.isArray(data?.themes)) throw new Error('Die Katalog-API liefert kein gültiges Themenverzeichnis.');
+    if (!Array.isArray(data?.themes)) throw catalogError('catalogInvalid');
     const seen = new Set();
     return data.themes.map(({theme, layers}) => {
         if (!theme?.identifier || typeof theme.title !== 'string' || !Array.isArray(layers) || seen.has(theme.identifier)) {
-            throw new Error('Die Katalog-API enthält ungültige oder doppelte Themen.');
+            throw catalogError('themesInvalid');
         }
         seen.add(theme.identifier);
         const ids = new Set();
         const themeText = [theme.title, theme.description, ...(theme.keywords || []), ...(theme.synonyms || [])];
         return {theme, layers: layers.map(layer => {
             if (!layer?.id || typeof layer.title !== 'string' || !layer.qwcLayerName || ids.has(layer.id)) {
-                throw new Error('Die Katalog-API enthält ungültige oder doppelte Kartenebenen.');
+                throw catalogError('layersInvalid');
             }
             ids.add(layer.id);
             return {...layer, searchText: normalize([...themeText, layer.id, layer.title, layer.description,

@@ -43,11 +43,19 @@ Die Komponente ist im Build registriert, wird aber nur über die Viewer-Konfigur
 {"name":"Kartenkatalog","cfg":{"catalogUrl":"/catalog-api/v1/catalog","width":"32em"}}
 ```
 
-Im TopBar-Menü wird ein Eintrag `{"key":"Kartenkatalog","icon":"catalog"}` ergänzt. Der Datenpfad benötigt ausserhalb des Dev-Servers eine entsprechende Server-/Proxy-Konfiguration. Das Plugin ist eine deutsche Oberfläche; die Menübeschriftung ist für die bestehenden Sprachen registriert.
+Im TopBar-Menü wird ein Eintrag `{"key":"Kartenkatalog","icon":"catalog"}` ergänzt. Der Datenpfad benötigt ausserhalb des Dev-Servers eine entsprechende Server-/Proxy-Konfiguration. Die Bedienoberfläche einschliesslich Menü, Tooltips, barrierefreier Beschriftungen und Fehlermeldungen ist für `de-CH` und `en-US` übersetzt. Die Sprache folgt der QWC-Auswahl, beispielsweise `?lang=en-US`; Deutsch bleibt die Rückfallsprache. Fachliche Inhalte der API wie Titel, Beschreibungen und Organisationsnamen bleiben in ihrer gelieferten Sprache.
+
+## Übersetzungen ergänzen
+
+Wie die bestehenden QWC-Plugins verwendet der Kartenkatalog `LocaleUtils.tr(...)` aus `qwc2/utils/LocaleUtils`. Der Fenstertitel nutzt `appmenu.items.Kartenkatalog`; weitere Texte liegen unter `kartenkatalog.*` in den bestehenden Dateien `frontend/static/translations/de-CH.json` und `en-US.json`. Dynamische Werte werden mit QWC-Platzhaltern `{0}`, `{1}` usw. eingesetzt; Ergebniszahlen verwenden übersetzte Singular-/Pluralbezeichnungen.
+
+`npm --prefix frontend run tsupdate` sammelt literale `LocaleUtils.tr(...)`-/`trmsg(...)`-Aufrufe aus `.js` und `.jsx` und aktualisiert `tsconfig.json`. Die reinen `.mjs`-Module geben deshalb stabile Fehlercodes zurück; die Übersetzung erfolgt erst beim Rendern im Plugin. React speichert Fehlercodes statt übersetzter Meldungen, damit bei einer Sprachänderung auch bestehende Fehler neu übersetzt werden. Unbekannte Fehler zeigen eine allgemeine übersetzte Meldung.
+
+Bei neuen Texten literale Übersetzungsschlüssel verwenden, beide Sprachdateien ausfüllen und `tsupdate` erneut ausführen. Der vorhandene QWC-Fallback bleibt unverändert; eine zusätzliche Übersetzungsbibliothek ist nicht erforderlich.
 
 ## Prüfung
 
-`npm test` prüft Suche, Datenvalidierung, Duplikate, Gruppen, Sichtbarkeit/Elternpfade, Entfernen/erneutes Hinzufügen, konkurrierende Aufrufe, veraltete Antworten nach Themenwechseln sowie die eingeschränkten Proxy-Routen. `npm run lint:catalog` prüft die neuen React-/Adapterdateien mit der vorhandenen ESLint-Konfiguration.
+`npm test` prüft vollständige deutsche/englische Plugin-Übersetzungen, Platzhalter, Fehlercodes und das Fehlen fest eingebauter UI-Texte sowie Suche, Datenvalidierung, Duplikate, Gruppen, Sichtbarkeit/Elternpfade, Entfernen/erneutes Hinzufügen, konkurrierende Aufrufe, veraltete Antworten nach Themenwechseln sowie die eingeschränkten Proxy-Routen. `npm run lint:catalog` prüft die neuen React-/Adapterdateien mit der vorhandenen ESLint-Konfiguration.
 
 
 Am 30.10.2026 geprüft: 23 Tests erfolgreich, Plugin-Lint und Webpack-Dev-Build erfolgreich. Im Browser wurden Einzel-Layer, Metadaten, Layergruppen einschliesslich konfigurierter Fremddienste, native Layerverwaltung, Sichtbarkeitsänderungen, Entfernen/erneutes Hinzufügen und Wiederherstellen über QWC-URLs geprüft. Ein nicht erreichbares Katalog-Backend wurde mit einer anderen lokalen Proxy-Adresse simuliert; Fehlermeldung und Wiederanlauf sind geprüft. Die kompakte Darstellung wurde auch bei einer schmalen Browseransicht kontrolliert.

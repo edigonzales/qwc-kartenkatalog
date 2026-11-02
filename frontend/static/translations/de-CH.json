@@ -3,9 +3,9 @@
   "messages": {
     "appmenu": {
       "items": {
+        "Kartenkatalog": "Kartenkatalog",
         "LandRegisterExtract": "Auszug Plan für das Grundbuch",
         "LegendPrint": "Legende drucken",
-        "Kartenkatalog": "Kartenkatalog",
         "Bookmark": "Lesezeichen",
         "Compare3D": "Vergleichen",
         "Editing": "Editieren",
@@ -73,6 +73,67 @@
       "reconnecting": "Verbindung wird wiederhergestellt...",
       "sessionnr": "session nr: {0}",
       "showObject": "Objekt(e) selektiert"
+    },
+    "kartenkatalog": {
+      "back": "Zurück zur Übersicht",
+      "clearSearch": "Suche löschen",
+      "downloadAvailable": "Möglich",
+      "downloadUnavailable": "Nicht verfügbar",
+      "errors": {
+        "addFailed": "Die Kartenebene konnte nicht hinzugefügt werden.",
+        "catalogInvalid": "Die Katalog-API liefert kein gültiges Themenverzeichnis.",
+        "catalogLoadFailed": "Der Kartenkatalog konnte nicht geladen werden.",
+        "catalogTimeout": "Die Katalog-API antwortet nicht rechtzeitig.",
+        "catalogUnavailable": "Der Kartenkatalog ist zurzeit nicht erreichbar. Bitte erneut versuchen.",
+        "definitionsFailed": "Die Layerdefinitionen konnten nicht geladen werden. Bitte erneut versuchen.",
+        "layerUnavailable": "Diese Kartenebene ist im aktuellen QWC-Projekt nicht verfügbar.",
+        "layersInvalid": "Die Katalog-API enthält ungültige oder doppelte Kartenebenen.",
+        "mapNotReady": "Die Karte ist noch nicht bereit.",
+        "serviceTimeout": "Der Kartendienst antwortet nicht. Bitte erneut versuchen.",
+        "themeChanged": "Die Karte wurde inzwischen gewechselt. Bitte erneut hinzufügen.",
+        "themesInvalid": "Die Katalog-API enthält ungültige oder doppelte Themen."
+      },
+      "fields": {
+        "availability": "Verfügbarkeit",
+        "dataOwner": "Zuständige Stelle",
+        "download": "Download",
+        "identifier": "Kennung",
+        "layers": "Kartenebenen",
+        "organization": "Organisation",
+        "theme": "Thema",
+        "transparency": "Vorgesehene Transparenz",
+        "type": "Typ"
+      },
+      "keywords": "Schlagwörter",
+      "layerAction": "{0}: {1}",
+      "layerPlural": "Kartenebenen",
+      "layerSingular": "Kartenebene",
+      "loadingCatalog": "Kartenkatalog wird geladen …",
+      "loadingLayer": "Wird geladen …",
+      "metadataFor": "Metadaten: {0}",
+      "moreInfo": "Weitere Informationen zum Thema",
+      "noDescription": "Keine Beschreibung vorhanden.",
+      "noResults": "Keine passenden Themen oder Kartenebenen gefunden.",
+      "resultCount": "{0} {1} in {2} {3}",
+      "retry": "Erneut laden",
+      "searchLabel": "Themen und Kartenebenen suchen",
+      "searchPlaceholder": "Themen und Kartenebenen suchen …",
+      "showMetadata": "Metadaten anzeigen",
+      "status": {
+        "hidden": "Aktivieren",
+        "missing": "Hinzufügen",
+        "partial": "Vervollständigen",
+        "visible": "In Karte"
+      },
+      "synonyms": "Synonyme",
+      "themeInfo": "Themeninformationen",
+      "themePlural": "Themen",
+      "themeSingular": "Thema",
+      "types": {
+        "externalWms": "Externer WMS",
+        "group": "Layergruppe",
+        "layer": "Kartenebene"
+      }
     },
     "layertree": {
       "printlegend": "Legende drucken",

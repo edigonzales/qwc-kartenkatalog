@@ -1,3 +1,5 @@
+import {catalogError} from './errors.mjs';
+
 export function leafNames(nodes) {
     return [...new Set(nodes.flatMap(node => node.sublayers?.length ? leafNames(node.sublayers) : node.name ? [node.name] : []))];
 }
@@ -61,7 +63,7 @@ export function createLayerController({resolve, createLayer, addLayer, changeLay
     };
     const add = (entry, dispatch, getState) => {
         const theme = getState().theme.current;
-        if (!theme) return Promise.reject(new Error('Die Karte ist noch nicht bereit.'));
+        if (!theme) return Promise.reject(catalogError('mapNotReady'));
         if (!pending.has(theme)) pending.set(theme, new Map());
         const requests = pending.get(theme);
         if (requests.has(entry.qwcLayerName)) return requests.get(entry.qwcLayerName);
@@ -69,12 +71,12 @@ export function createLayerController({resolve, createLayer, addLayer, changeLay
             let nodes = definitions(entry, theme);
             if (!nodes) {
                 nodes = await resolve(entry.qwcLayerName, theme);
-                if (!nodes?.length || !leafNames(nodes).length) throw new Error('Diese Kartenebene ist im aktuellen QWC-Projekt nicht verfügbar.');
+                if (!nodes?.length || !leafNames(nodes).length) throw catalogError('layerUnavailable');
                 if (!cache.has(theme)) cache.set(theme, new Map());
                 cache.get(theme).set(entry.qwcLayerName, structuredClone(nodes));
             }
             const state = getState(); // Recheck after async resolution, including concurrent additions.
-            if (state.theme.current !== theme) throw new Error('Die Karte wurde inzwischen gewechselt. Bitte erneut hinzufügen.');
+            if (state.theme.current !== theme) throw catalogError('themeChanged');
             const {matches} = matchesFor(entry, state);
             const present = new Set(matches.map(m => m.name));
             for (const match of matches) {

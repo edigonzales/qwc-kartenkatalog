@@ -1,6 +1,7 @@
 import {addThemeSublayer, changeLayerProperty} from 'qwc2/actions/layers';
 
 import {themeLayerRestorer} from '../../themeLayerRestorer';
+import {catalogError} from './errors.mjs';
 import {createLayerController} from './layers.mjs';
 
 export function createQwcLayerController() {
@@ -11,11 +12,11 @@ export function createQwcLayerController() {
         addLayer: addThemeSublayer,
         changeLayerProperty,
         resolve: (name, theme) => new Promise((resolve, reject) => {
-            const timeout = setTimeout(() => reject(new Error('Der Kartendienst antwortet nicht. Bitte erneut versuchen.')), 15000);
+            const timeout = setTimeout(() => reject(catalogError('serviceTimeout')), 15000);
             themeLayerRestorer([name], theme, (nodes, mapping) => {
                 clearTimeout(timeout);
                 if (mapping === null) {
-                    reject(new Error('Die Layerdefinitionen konnten nicht geladen werden. Bitte erneut versuchen.'));
+                    reject(catalogError('definitionsFailed'));
                 } else {
                     resolve(nodes);
                 }

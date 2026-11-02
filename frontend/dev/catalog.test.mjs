@@ -82,13 +82,13 @@ test('theme changes during resolution discard the stale result', async () => {
     const pending = h.add();
     h.state.theme.current = {...h.state.theme.current, id: 'other'};
     complete([{name: entry.qwcLayerName}]);
-    await assert.rejects(pending, /gewechselt/);
+    await assert.rejects(pending, {code: 'themeChanged'});
     assert.equal(h.actions.length, 0);
 });
 test('unavailable and failing definitions are retryable without adding placeholders', async () => {
     let count = 0;
     const h = harness(async () => ++count === 1 ? [] : [{name: entry.qwcLayerName}]);
-    await assert.rejects(h.add(), /nicht verfügbar/);
+    await assert.rejects(h.add(), {code: 'layerUnavailable'});
     assert.equal(h.state.layers.flat.length, 0);
     await h.add();
     assert.equal(h.status(), 'visible');
