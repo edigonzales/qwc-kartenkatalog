@@ -10,6 +10,7 @@ const codes = new Set([
     'catalogUnavailable',
     'catalogTimeout',
     'catalogLoadFailed',
+    'removeFailed',
     'addFailed'
 ]);
 

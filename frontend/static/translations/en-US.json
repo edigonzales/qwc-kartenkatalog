@@ -89,6 +89,7 @@
         "layerUnavailable": "This map layer is not available in the current QWC project.",
         "layersInvalid": "The catalog API contains invalid or duplicate map layers.",
         "mapNotReady": "The map is not ready yet.",
+        "removeFailed": "The map layer could not be removed.",
         "serviceTimeout": "The map service did not respond. Please try again.",
         "themeChanged": "The map has changed. Please add the layer again.",
         "themesInvalid": "The catalog API contains invalid or duplicate topics."
@@ -111,14 +112,14 @@
       "noDescription": "No description available.",
       "noResults": "No matching topics or map layers found.",
       "resultCount": "{0} {1} in {2} {3}",
+      "removeLayer": "Remove",
       "retry": "Reload",
       "searchLabel": "Search topics and map layers",
       "searchPlaceholder": "Search topics and map layers …",
       "status": {
         "hidden": "Activate",
         "missing": "Add",
-        "partial": "Complete",
-        "visible": "In map"
+        "partial": "Complete"
       },
       "synonyms": "Synonyms",
       "themeInfo": "Topic information",

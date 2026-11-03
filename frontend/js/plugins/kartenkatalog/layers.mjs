@@ -41,7 +41,7 @@ export function missingDefinitions(nodes, present) {
 }
 
 /** QWC adapters are injected so this state/duplicate logic can be tested independently. */
-export function createLayerController({resolve, createLayer, addLayer, changeLayerProperty, baseUrl}) {
+export function createLayerController({resolve, createLayer, addLayer, changeLayerProperty, removeLayer, baseUrl}) {
     const cache = new WeakMap();
     const pending = new WeakMap();
     const definitions = (entry, theme) => {
@@ -89,5 +89,16 @@ export function createLayerController({resolve, createLayer, addLayer, changeLay
         operation.finally(() => requests.delete(entry.qwcLayerName)).catch(() => {});
         return operation;
     };
-    return {add, status};
+    const remove = (entry, dispatch, getState) => {
+        if (!getState().theme.current) throw catalogError('mapNotReady');
+        const count = matchesFor(entry, getState()).matches.length;
+        for (let index = 0; index < count; index++) {
+            // QWC may prune empty groups or merge WMS layers after removal.
+            // Resolve the next path against the current state each time.
+            const match = matchesFor(entry, getState()).matches[0];
+            if (!match) break;
+            dispatch(removeLayer(match.layerId, match.path));
+        }
+    };
+    return {add, remove, status};
 }

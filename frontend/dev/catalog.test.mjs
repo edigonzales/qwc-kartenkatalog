@@ -21,10 +21,20 @@ function harness(resolve = async () => [{name: entry.qwcLayerName, opacity: 178,
     const controller = createLayerController({resolve, baseUrl: 'http://localhost:8082/map/',
         createLayer: (theme, themes, nodes) => ({id: `user-${++count}`, type: 'wms', url: theme.url, role: 3, visibility: true, sublayers: nodes}),
         addLayer: layer => ({type: 'ADD', layer}),
+        removeLayer: (id, path) => ({type: 'REMOVE', id, path}),
         changeLayerProperty: (id, property, value, path, recurse) => ({type: 'CHANGE', id, property, value, path, recurse})});
     const dispatch = action => {
         actions.push(action);
         if (action.type === 'ADD') state.layers.flat.push(action.layer);
+        if (action.type === 'REMOVE') {
+            const layer = state.layers.flat.find(node => node.id === action.id);
+            if (!action.path.length) state.layers.flat = state.layers.flat.filter(node => node !== layer);
+            else {
+                let parent = layer;
+                for (const index of action.path.slice(0, -1)) parent = parent.sublayers[index];
+                parent.sublayers.splice(action.path.at(-1), 1);
+            }
+        }
         if (action.type === 'CHANGE') {
             let node = state.layers.flat.find(layer => layer.id === action.id);
             node.visibility = true;
@@ -32,6 +42,7 @@ function harness(resolve = async () => [{name: entry.qwcLayerName, opacity: 178,
         }
     };
     return {controller, actions, dispatch, get state() { return state; }, set state(value) { state = value; },
+        remove: (layer = entry) => controller.remove(layer, dispatch, () => state),
         add: (layer = entry) => controller.add(layer, dispatch, () => state), status: (layer = entry) => controller.status(layer, state)};
 }
 test('adds via adapter once, preserves source opacity and does not create duplicates', async () => {
@@ -115,4 +126,39 @@ test('concurrent group and member requests cannot add the member twice', async (
         assert.equal(names.filter(name => name === entry.qwcLayerName).length, 1);
         assert.equal(h.status(group), 'visible');
     }
+});
+
+test('removes a layer without removing siblings or layers from another service, then allows readding', async () => {
+    const h = harness();
+    await h.add();
+    h.state.layers.flat[0].sublayers.push({name: 'unrelated'});
+    h.state.layers.flat.push({id: 'foreign', type: 'wms', role: 3, url: 'https://other.example/wms', sublayers: [{name: entry.qwcLayerName}]});
+    h.remove();
+    assert.equal(h.status(), 'missing');
+    assert.deepEqual(h.state.layers.flat[0].sublayers.map(node => node.name), ['unrelated']);
+    assert.equal(h.state.layers.flat[1].sublayers[0].name, entry.qwcLayerName);
+    await h.add();
+    assert.equal(h.status(), 'visible');
+});
+test('group removal recalculates sibling paths and removes all copies, including hidden members', async () => {
+    const h = harness(async () => [{name: 'group', sublayers: [{name: 'a'}, {name: 'b'}]}]);
+    const group = {...entry, qwcLayerName: 'group'};
+    await h.add(group);
+    h.state.layers.flat[0].sublayers[0].sublayers.push({name: 'unrelated'});
+    h.state.layers.flat.push({id: 'copy', type: 'wms', role: 2, url: '/ows/somap', sublayers: [{name: 'a', visibility: false}]});
+    h.remove(group);
+    assert.equal(h.status(group), 'missing');
+    assert.deepEqual(h.state.layers.flat[0].sublayers[0].sublayers.map(node => node.name), ['unrelated']);
+    assert.equal(h.state.layers.flat[1].sublayers.length, 0);
+    assert.equal(h.actions.filter(action => action.type === 'REMOVE').length, 3);
+    h.remove(group);
+    assert.equal(h.actions.filter(action => action.type === 'REMOVE').length, 3);
+});
+test('removes matching root layers and rejects removal without a current theme', () => {
+    const h = harness();
+    h.state.layers.flat = [{id: 'root', name: entry.qwcLayerName, type: 'wms', role: 3, url: '/ows/somap'}];
+    h.remove();
+    assert.deepEqual(h.state.layers.flat, []);
+    h.state.theme.current = null;
+    assert.throws(() => h.remove(), {code: 'mapNotReady'});
 });

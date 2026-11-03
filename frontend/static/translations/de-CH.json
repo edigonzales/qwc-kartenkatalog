@@ -89,6 +89,7 @@
         "layerUnavailable": "Diese Kartenebene ist im aktuellen QWC-Projekt nicht verfügbar.",
         "layersInvalid": "Die Katalog-API enthält ungültige oder doppelte Kartenebenen.",
         "mapNotReady": "Die Karte ist noch nicht bereit.",
+        "removeFailed": "Die Kartenebene konnte nicht entfernt werden.",
         "serviceTimeout": "Der Kartendienst antwortet nicht. Bitte erneut versuchen.",
         "themeChanged": "Die Karte wurde inzwischen gewechselt. Bitte erneut hinzufügen.",
         "themesInvalid": "Die Katalog-API enthält ungültige oder doppelte Themen."
@@ -111,14 +112,14 @@
       "noDescription": "Keine Beschreibung vorhanden.",
       "noResults": "Keine passenden Themen oder Kartenebenen gefunden.",
       "resultCount": "{0} {1} in {2} {3}",
+      "removeLayer": "Entfernen",
       "retry": "Erneut laden",
       "searchLabel": "Themen und Kartenebenen suchen",
       "searchPlaceholder": "Themen und Kartenebenen suchen …",
       "status": {
         "hidden": "Aktivieren",
         "missing": "Hinzufügen",
-        "partial": "Vervollständigen",
-        "visible": "In Karte"
+        "partial": "Vervollständigen"
       },
       "synonyms": "Synonyme",
       "themeInfo": "Themeninformationen",

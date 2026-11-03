@@ -1,4 +1,4 @@
-import {addThemeSublayer, changeLayerProperty} from 'qwc2/actions/layers';
+import {addThemeSublayer, changeLayerProperty, removeLayer} from 'qwc2/actions/layers';
 
 import {themeLayerRestorer} from '../../themeLayerRestorer';
 import {catalogError} from './errors.mjs';
@@ -11,6 +11,7 @@ export function createQwcLayerController() {
         // only on LayerRole.THEME. mergeSubLayers extracts external services.
         addLayer: addThemeSublayer,
         changeLayerProperty,
+        removeLayer,
         resolve: (name, theme) => new Promise((resolve, reject) => {
             const timeout = setTimeout(() => reject(catalogError('serviceTimeout')), 15000);
             themeLayerRestorer([name], theme, (nodes, mapping) => {

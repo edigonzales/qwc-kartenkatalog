@@ -17,7 +17,7 @@ import {createQwcLayerController} from './kartenkatalog/qwc';
 import './style/Kartenkatalog.css';
 
 const statusLabel = status => ({
-    visible: LocaleUtils.tr('kartenkatalog.status.visible'),
+    visible: LocaleUtils.tr('kartenkatalog.removeLayer'),
     hidden: LocaleUtils.tr('kartenkatalog.status.hidden'),
     partial: LocaleUtils.tr('kartenkatalog.status.partial'),
     missing: LocaleUtils.tr('kartenkatalog.status.missing')
@@ -33,6 +33,7 @@ const errorLabel = code => ({
     layerUnavailable: LocaleUtils.tr('kartenkatalog.errors.layerUnavailable'),
     themeChanged: LocaleUtils.tr('kartenkatalog.errors.themeChanged'),
     serviceTimeout: LocaleUtils.tr('kartenkatalog.errors.serviceTimeout'),
+    removeFailed: LocaleUtils.tr('kartenkatalog.errors.removeFailed'),
     definitionsFailed: LocaleUtils.tr('kartenkatalog.errors.definitionsFailed')
 }[code] || LocaleUtils.tr('kartenkatalog.errors.addFailed'));
 
@@ -90,16 +91,20 @@ function Kartenkatalog({catalogUrl = '/catalog-api/v1/catalog', dispatch, layers
 
     const filtered = useMemo(() => filterCatalog(catalog || [], query), [catalog, query]);
     const count = filtered.reduce((total, entry) => total + entry.layers.length, 0);
-    const add = async entry => {
+    const toggleLayer = async entry => {
         const name = entry.qwcLayerName;
         if (inFlight.current.has(name)) return;
         inFlight.current.add(name);
         setBusy(previous => new Set(previous).add(name));
         setErrors(previous => ({...previous, [name]: null}));
+        let removing = false;
         try {
-            await dispatch((dispatchAction, getState) => controller.add(entry, dispatchAction, getState));
+            await dispatch((dispatchAction, getState) => {
+                removing = controller.status(entry, getState()) === 'visible';
+                return controller[removing ? 'remove' : 'add'](entry, dispatchAction, getState);
+            });
         } catch (error) {
-            setErrors(previous => ({...previous, [name]: errorCode(error, 'addFailed')}));
+            setErrors(previous => ({...previous, [name]: errorCode(error, removing ? 'removeFailed' : 'addFailed')}));
         } finally {
             inFlight.current.delete(name);
             setBusy(previous => {
@@ -114,8 +119,8 @@ function Kartenkatalog({catalogUrl = '/catalog-api/v1/catalog', dispatch, layers
         const status = controller.status(entry, state);
         const label = pending ? LocaleUtils.tr('kartenkatalog.loadingLayer') : statusLabel(status);
         return (<button aria-label={LocaleUtils.tr('kartenkatalog.layerAction', label, entry.title)} className="button kartenkatalog-add"
-            disabled={pending || !theme || status === 'visible'} onClick={() => add(entry)} title={label} type="button">
-            {pending ? <Spinner /> : <Icon icon={status === 'visible' ? 'checked' : status === 'hidden' ? 'unchecked' : 'plus'} />}
+            disabled={pending || !theme} onClick={() => toggleLayer(entry)} title={label} type="button">
+            {pending ? <Spinner /> : <Icon icon={status === 'visible' ? 'minus' : status === 'hidden' ? 'unchecked' : 'plus'} />}
             <span>{label}</span>
         </button>);
     };
