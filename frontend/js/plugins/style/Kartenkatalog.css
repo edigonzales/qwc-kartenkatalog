@@ -22,7 +22,7 @@
     list-style: none;
 }
 #Kartenkatalog summary::-webkit-details-marker { display: none; }
-#Kartenkatalog summary:hover { background: var(--list-item-bg-color-hover); }
+#Kartenkatalog summary:hover, #Kartenkatalog details[open] > summary { background: var(--list-item-bg-color-hover); }
 #Kartenkatalog summary:focus-visible, #Kartenkatalog button:focus-visible { outline: var(--focus-outline); outline-offset: -2px; }
 #Kartenkatalog .kartenkatalog-theme-title { font-weight: bold; }
 #Kartenkatalog .kartenkatalog-badge { border: 1px solid var(--border-color); padding: 0 0.4em; border-radius: 0.2em; font-size: small; }
@@ -33,11 +33,16 @@
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
-#Kartenkatalog .kartenkatalog-theme-content { padding: 0 0.75em; }
+#Kartenkatalog .kartenkatalog-theme-content { padding: 0 0.75em 0 2.15em; }
+#Kartenkatalog .kartenkatalog-layers {
+    margin-top: 0.5em;
+    border-left: 1px solid var(--border-color);
+    padding-left: 1.25em;
+}
 #Kartenkatalog .kartenkatalog-layer {
-    border-top: 1px solid var(--border-color);
     padding: 0.6em 0 0;
 }
+#Kartenkatalog .kartenkatalog-layer + .kartenkatalog-layer { border-top: 1px solid var(--border-color); }
 #Kartenkatalog .kartenkatalog-layer-header {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
