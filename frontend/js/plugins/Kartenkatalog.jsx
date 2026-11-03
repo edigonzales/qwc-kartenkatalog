@@ -181,7 +181,7 @@ function Kartenkatalog({catalogUrl = '/catalog-api/v1/catalog', dispatch, layers
                 </summary>
                 {query.trim() || expanded.has(entry.theme.identifier) ? (<div className="kartenkatalog-theme-content">
                     <Description item={entry.theme} />
-                    <button className="kartenkatalog-text-button" onClick={() => setDetail({theme: entry.theme, count: (catalog.find(e => e.theme.identifier === entry.theme.identifier)?.layers.length || 0)})} type="button">
+                    <button className="kartenkatalog-text-button kartenkatalog-theme-info" onClick={() => setDetail({theme: entry.theme, count: (catalog.find(e => e.theme.identifier === entry.theme.identifier)?.layers.length || 0)})} type="button">
                         {LocaleUtils.tr('kartenkatalog.themeInfo')}
                     </button>
                     {entry.layers.map(layer => (<div className="kartenkatalog-layer" key={layer.id}>

@@ -51,6 +51,8 @@
     font: inherit;
     text-align: left;
 }
+#Kartenkatalog .kartenkatalog-text-button { padding: 0.25em 0; }
+#Kartenkatalog .kartenkatalog-theme-info { color: var(--text-color-link); }
 #Kartenkatalog .kartenkatalog-text-button:hover { text-decoration: underline; }
 #Kartenkatalog .kartenkatalog-layer-title { font-weight: bold; overflow-wrap: anywhere; }
 #Kartenkatalog .kartenkatalog-add { display: inline-flex; align-items: center; gap: 0.35em; white-space: nowrap; margin: 0; }
@@ -66,7 +68,6 @@
 #Kartenkatalog .kartenkatalog-description img { max-width: 100%; height: auto; }
 #Kartenkatalog .kartenkatalog-description pre { white-space: pre-wrap; }
 #Kartenkatalog .kartenkatalog-description table { display: block; max-width: 100%; overflow-x: auto; }
-#Kartenkatalog .kartenkatalog-description a { color: var(--text-color); text-decoration: underline; }
 #Kartenkatalog .kartenkatalog-detail dl { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 0.5em 1em; margin: 1em 0; }
 #Kartenkatalog .kartenkatalog-detail dt { font-weight: bold; }
 #Kartenkatalog .kartenkatalog-detail dd { margin: 0; overflow-wrap: anywhere; }
