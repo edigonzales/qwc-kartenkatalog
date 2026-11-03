@@ -146,7 +146,7 @@ function Kartenkatalog({catalogUrl = '/catalog-api/v1/catalog', dispatch, layers
             </dl>
             <Terms title={LocaleUtils.tr('kartenkatalog.keywords')} values={item.keywords} />
             <Terms title={LocaleUtils.tr('kartenkatalog.synonyms')} values={item.synonyms} />
-            {moreInfo ? <p><a href={moreInfo} rel="noopener noreferrer" target="_blank">{LocaleUtils.tr('kartenkatalog.moreInfo')} <Icon icon="info" /></a></p> : null}
+            {moreInfo ? <p><a href={moreInfo} rel="noopener noreferrer" target="_blank">{LocaleUtils.tr('kartenkatalog.moreInfo')}</a></p> : null}
         </div>);
     };
     const renderList = () => (<>
