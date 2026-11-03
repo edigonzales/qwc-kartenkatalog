@@ -100,8 +100,10 @@
         "download": "Download",
         "layers": "Map layers"
       },
+      "groupPreviewHint": "Contains multiple map layers. No map preview available.",
       "keywords": "Keywords",
       "layerAction": "{0}: {1}",
+      "layerGroup": "Layer group",
       "layerInfo": "Layer information",
       "layerListTitle": "Map layers ({0})",
       "layerPlural": "map layers",

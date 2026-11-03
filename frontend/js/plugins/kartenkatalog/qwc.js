@@ -1,8 +1,22 @@
-import {addThemeSublayer, changeLayerProperty, removeLayer} from 'qwc2/actions/layers';
+import {addLayer, addThemeSublayer, changeLayerProperty, LayerRole, removeLayer} from 'qwc2/actions/layers';
+import LayerUtils from 'qwc2/utils/LayerUtils';
+import ThemeUtils from 'qwc2/utils/ThemeUtils';
 
 import {themeLayerRestorer} from '../../themeLayerRestorer';
 import {catalogError} from './errors.mjs';
 import {createLayerController} from './layers.mjs';
+import {createPreviewController} from './preview.mjs';
+import {buildPreviewLayer, previewLayerVisible} from './previewLayer.mjs';
+
+export function createQwcPreviewController(controller, onGroup) {
+    return createPreviewController({controller, onGroup, showLayer: addLayer, removeLayer,
+        createLayer: (entry, nodes, state) => buildPreviewLayer(entry, nodes, state, {
+            createThemeLayer: ThemeUtils.createThemeLayer,
+            completeExternalLayer: LayerUtils.completeExternalLayer,
+            role: LayerRole.SELECTION
+        }),
+        isVisible: (layer, state) => previewLayerVisible(layer, state, window.location.href)});
+}
 
 export function createQwcLayerController() {
     return createLayerController({

@@ -1,7 +1,11 @@
 import {catalogError} from './errors.mjs';
 
+export function leafDefinitions(nodes) {
+    return nodes.flatMap(node => node.sublayers?.length ? leafDefinitions(node.sublayers) : node.name ? [node] : []);
+}
+
 export function leafNames(nodes) {
-    return [...new Set(nodes.flatMap(node => node.sublayers?.length ? leafNames(node.sublayers) : node.name ? [node.name] : []))];
+    return [...new Set(leafDefinitions(nodes).map(node => node.name))];
 }
 
 export function findDefinition(nodes, name) {
@@ -44,10 +48,30 @@ export function missingDefinitions(nodes, present) {
 export function createLayerController({resolve, createLayer, addLayer, changeLayerProperty, removeLayer, baseUrl}) {
     const cache = new WeakMap();
     const pending = new WeakMap();
+    const resolving = new WeakMap();
     const definitions = (entry, theme) => {
         const known = findDefinition(theme?.sublayers, entry.qwcLayerName);
         return known ? [known] : theme && cache.get(theme)?.get(entry.qwcLayerName);
     };
+    const resolveDefinitions = (entry, theme) => {
+        if (!theme) return Promise.reject(catalogError('mapNotReady'));
+        const known = definitions(entry, theme);
+        if (known) return Promise.resolve(known);
+        if (!resolving.has(theme)) resolving.set(theme, new Map());
+        const requests = resolving.get(theme);
+        if (requests.has(entry.qwcLayerName)) return requests.get(entry.qwcLayerName);
+        const operation = (async() => {
+            const nodes = await resolve(entry.qwcLayerName, theme);
+            if (!nodes?.length || !leafNames(nodes).length) throw catalogError('layerUnavailable');
+            if (!cache.has(theme)) cache.set(theme, new Map());
+            cache.get(theme).set(entry.qwcLayerName, structuredClone(nodes));
+            return cache.get(theme).get(entry.qwcLayerName);
+        })();
+        requests.set(entry.qwcLayerName, operation);
+        operation.finally(() => requests.delete(entry.qwcLayerName)).catch(() => {});
+        return operation;
+    };
+    const isGroup = (entry, theme) => entry.type === 'layergroup' || leafDefinitions(definitions(entry, theme) || []).length > 1;
     const matchesFor = (entry, state) => {
         const theme = state.theme.current;
         const nodes = definitions(entry, theme);
@@ -68,13 +92,7 @@ export function createLayerController({resolve, createLayer, addLayer, changeLay
         const requests = pending.get(theme);
         if (requests.has(entry.qwcLayerName)) return requests.get(entry.qwcLayerName);
         const operation = (async() => {
-            let nodes = definitions(entry, theme);
-            if (!nodes) {
-                nodes = await resolve(entry.qwcLayerName, theme);
-                if (!nodes?.length || !leafNames(nodes).length) throw catalogError('layerUnavailable');
-                if (!cache.has(theme)) cache.set(theme, new Map());
-                cache.get(theme).set(entry.qwcLayerName, structuredClone(nodes));
-            }
+            const nodes = await resolveDefinitions(entry, theme);
             const state = getState(); // Recheck after async resolution, including concurrent additions.
             if (state.theme.current !== theme) throw catalogError('themeChanged');
             const {matches} = matchesFor(entry, state);
@@ -100,5 +118,5 @@ export function createLayerController({resolve, createLayer, addLayer, changeLay
             dispatch(removeLayer(match.layerId, match.path));
         }
     };
-    return {add, remove, status};
+    return {add, remove, status, resolveDefinitions, isGroup};
 }

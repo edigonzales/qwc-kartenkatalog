@@ -100,8 +100,10 @@
         "download": "Download",
         "layers": "Kartenebenen"
       },
+      "groupPreviewHint": "Enthält mehrere Kartenebenen. Keine Kartenvorschau verfügbar.",
       "keywords": "Schlagwörter",
       "layerAction": "{0}: {1}",
+      "layerGroup": "Layergruppe",
       "layerInfo": "Kartenebeneninformationen",
       "layerListTitle": "Kartenebenen ({0})",
       "layerPlural": "Kartenebenen",
