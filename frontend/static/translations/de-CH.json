@@ -103,6 +103,7 @@
       "keywords": "Schlagwörter",
       "layerAction": "{0}: {1}",
       "layerInfo": "Kartenebeneninformationen",
+      "layerListTitle": "Kartenebenen ({0})",
       "layerPlural": "Kartenebenen",
       "layerSingular": "Kartenebene",
       "loadingCatalog": "Kartenkatalog wird geladen …",

@@ -42,6 +42,7 @@
     "kartenkatalog.keywords",
     "kartenkatalog.layerAction",
     "kartenkatalog.layerInfo",
+    "kartenkatalog.layerListTitle",
     "kartenkatalog.layerPlural",
     "kartenkatalog.layerSingular",
     "kartenkatalog.loadingCatalog",

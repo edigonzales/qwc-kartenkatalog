@@ -103,6 +103,7 @@
       "keywords": "Keywords",
       "layerAction": "{0}: {1}",
       "layerInfo": "Layer information",
+      "layerListTitle": "Map layers ({0})",
       "layerPlural": "map layers",
       "layerSingular": "map layer",
       "loadingCatalog": "Loading map catalog …",

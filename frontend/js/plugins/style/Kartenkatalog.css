@@ -34,14 +34,20 @@
     overflow: hidden;
 }
 #Kartenkatalog .kartenkatalog-theme-content { padding: 0 0.75em 0.6em 2.15em; }
+#Kartenkatalog .kartenkatalog-layer-list-title {
+    margin: 0.75rem 0 0.25rem;
+    font-size: 0.9em;
+    font-weight: bold;
+    line-height: 1.5;
+}
 #Kartenkatalog .kartenkatalog-layers {
-    margin-top: 0.5em;
     border-left: 1px solid var(--border-color);
     padding-left: 1.25em;
 }
 #Kartenkatalog .kartenkatalog-layer {
     padding: 0.6em 0 0;
 }
+#Kartenkatalog .kartenkatalog-layer:first-child { padding-top: 0; }
 #Kartenkatalog .kartenkatalog-layer + .kartenkatalog-layer { border-top: 1px solid var(--border-color); }
 #Kartenkatalog .kartenkatalog-layer-header {
     display: grid;
