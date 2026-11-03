@@ -163,7 +163,6 @@ function Kartenkatalog({catalogUrl = '/catalog-api/v1/catalog', dispatch, layers
         {!filtered.length ? <p className="kartenkatalog-empty">{LocaleUtils.tr('kartenkatalog.noResults')}</p> : null}
         <div className="kartenkatalog-themes">
             {filtered.map(entry => (<details key={entry.theme.identifier} onToggle={event => {
-                if (query.trim()) return;
                 const open = event.currentTarget.open;
                 setExpanded(previous => {
                     if (previous.has(entry.theme.identifier) === open) return previous;
@@ -171,14 +170,14 @@ function Kartenkatalog({catalogUrl = '/catalog-api/v1/catalog', dispatch, layers
                     if (open) next.add(entry.theme.identifier); else next.delete(entry.theme.identifier);
                     return next;
                 });
-            }} open={Boolean(query.trim()) || expanded.has(entry.theme.identifier)}>
+            }} open={expanded.has(entry.theme.identifier)}>
                 <summary>
-                    <Icon icon={query.trim() || expanded.has(entry.theme.identifier) ? 'chevron-down' : 'chevron-right'} />
+                    <Icon icon={expanded.has(entry.theme.identifier) ? 'chevron-down' : 'chevron-right'} />
                     <span className="kartenkatalog-theme-title">{entry.theme.title}</span>
                     <span className="kartenkatalog-badge">{entry.layers.length}</span>
-                    {!query.trim() && !expanded.has(entry.theme.identifier) ? <Description item={entry.theme} preview /> : null}
+                    {!expanded.has(entry.theme.identifier) ? <Description item={entry.theme} preview /> : null}
                 </summary>
-                {query.trim() || expanded.has(entry.theme.identifier) ? (<div className="kartenkatalog-theme-content">
+                {expanded.has(entry.theme.identifier) ? (<div className="kartenkatalog-theme-content">
                     <Description item={entry.theme} />
                     <button className="kartenkatalog-text-button kartenkatalog-theme-info" onClick={() => setDetail({theme: entry.theme, count: (catalog.find(e => e.theme.identifier === entry.theme.identifier)?.layers.length || 0)})} type="button">
                         {LocaleUtils.tr('kartenkatalog.themeInfo')}
