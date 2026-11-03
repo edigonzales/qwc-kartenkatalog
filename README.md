@@ -13,7 +13,7 @@ Voraussetzungen: Docker mit Compose v2 oder neuer, Internetzugang zu Docker Hub 
 
 - QWC: [lokale Karte](http://127.0.0.1:8082/map/).
 - Kartenkatalog: [Themen](http://127.0.0.1:8083/thema).
-- Backend: `sogis/kartenkatalog:0.2.75-jvm`, fest versioniert; auf ARM mit amd64-Emulation.
+- Backend: `sogis/kartenkatalog:0.2.77-jvm`, fest versioniert; auf ARM mit amd64-Emulation.
 - QWC: `sogis/qwc-kartenkatalog:latest`, amd64/arm64. Vor der ersten erfolgreichen Pipeline-Veröffentlichung den lokalen Build verwenden.
 
 Nur die Loopback-Adresse wird veröffentlicht. Belegte Ports führen zu einem Fehler; laufende Dev-Server gegebenenfalls selbst beenden oder andere Ports konfigurieren. Der Start wartet bis zu 180 Sekunden auf QWC und Backend-Readiness. Bei einem Fehler bleiben Logs über `docker compose logs` verfügbar.

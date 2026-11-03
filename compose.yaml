@@ -1,7 +1,7 @@
 name: qwc-kartenkatalog
 services:
   kartenkatalog:
-    image: ${CATALOG_IMAGE:-sogis/kartenkatalog:0.2.75-jvm}
+    image: ${CATALOG_IMAGE:-sogis/kartenkatalog:0.2.77-jvm}
     platform: linux/amd64
     environment:
       CATALOG_XTF_LOCATION: file:/catalog/catalog.xtf

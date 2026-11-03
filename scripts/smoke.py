@@ -23,6 +23,13 @@ assert 'javascript' in get('/map/dist/QWC2App.js')[1]['Content-Type']
 assert 'text/css' in get('/map/assets/css/qwc2.css')[1]['Content-Type']
 catalog = json.loads(get('/catalog-api/v1/catalog')[2])
 assert catalog['themes'] and any(entry['layers'] for entry in catalog['themes'])
+assert len(catalog['themes']) == 169
+assert sum(len(entry['layers']) for entry in catalog['themes']) == 886
+assert all(layer['organization'] for entry in catalog['themes'] for layer in entry['layers'])
+hoheitsgrenzen = next(entry['theme'] for entry in catalog['themes'] if entry['theme']['identifier'] == 'harvest-hoheitsgrenzen')
+assert hoheitsgrenzen['dataOwner'] == 'Amt für Geoinformation'
+assert hoheitsgrenzen['contact'] == 'mailto:agi@bd.so.ch'
+
 # The shared adapter must still be active in the packaged application.
 config = json.loads(get('/map/config.json?lang=de-CH')[2])
 assert (config.get('startupTask') or {}).get('key') != 'Kartenkatalog'

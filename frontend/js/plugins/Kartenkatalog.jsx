@@ -123,7 +123,7 @@ function Kartenkatalog({catalogUrl = '/catalog-api/v1/catalog', dispatch, layers
         const item = detail.layer || detail.theme;
         const moreInfo = safeLink(detail.theme.furtherInfoUrl);
         return (<div className="kartenkatalog-detail">
-            <button className="button" onClick={() => setDetail(null)} type="button"><Icon icon="chevron-left" /> {LocaleUtils.tr('kartenkatalog.back')}</button>
+            <button className="button" onClick={() => setDetail(null)} type="button"><Icon icon="chevron-left" /><span>{LocaleUtils.tr('kartenkatalog.back')}</span></button>
             <h3>{item.title}</h3>
             {detail.layer ? <div className="kartenkatalog-detail-action">{addButton(detail.layer)}{errorMessage(detail.layer)}</div> : null}
             <Description item={item} />
