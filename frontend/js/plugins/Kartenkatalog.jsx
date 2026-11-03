@@ -40,12 +40,19 @@ const errorLabel = code => ({
     definitionsFailed: LocaleUtils.tr('kartenkatalog.errors.definitionsFailed')
 }[code] || LocaleUtils.tr('kartenkatalog.errors.addFailed'));
 
-function Description({item}) {
-    const html = useMemo(() => DOMPurify.sanitize(item.descriptionHtml || ''), [item.descriptionHtml]);
+function Description({item, preview = false}) {
+    const {html, text} = useMemo(() => {
+        const source = item.descriptionHtml || (/<\/?[a-z][^>]*>/i.test(item.description || '') ? item.description : '');
+        const sanitized = DOMPurify.sanitize(source, {USE_PROFILES: {html: true}});
+        const fragment = DOMPurify.sanitize(sanitized, {RETURN_DOM_FRAGMENT: true});
+        fragment.querySelectorAll('br, p, div, li, h1, h2, h3, h4, h5, h6, tr').forEach(element => element.after(' '));
+        return {html: sanitized, text: source ? fragment.textContent.replace(/\s+/g, ' ').trim() : item.description};
+    }, [item.descriptionHtml, item.description]);
+    if (preview) return text ? <span className="kartenkatalog-theme-description">{text}</span> : null;
     return html ? <div className="kartenkatalog-description" dangerouslySetInnerHTML={{__html: html}} /> :
-        item.description ? <p className="kartenkatalog-description">{item.description}</p> : <p>{LocaleUtils.tr('kartenkatalog.noDescription')}</p>;
+        text ? <p className="kartenkatalog-description">{text}</p> : <p>{LocaleUtils.tr('kartenkatalog.noDescription')}</p>;
 }
-Description.propTypes = {item: PropTypes.object.isRequired};
+Description.propTypes = {item: PropTypes.object.isRequired, preview: PropTypes.bool};
 
 function Terms({title, values}) {
     return values?.length ? <div className="kartenkatalog-terms"><h4>{title}</h4><ul>{values.map(value => <li key={value}>{value}</li>)}</ul></div> : null;
@@ -170,11 +177,12 @@ function Kartenkatalog({catalogUrl = '/catalog-api/v1/catalog', dispatch, layers
                     <Icon icon={query.trim() || expanded.has(entry.theme.identifier) ? 'chevron-down' : 'chevron-right'} />
                     <span className="kartenkatalog-theme-title">{entry.theme.title}</span>
                     <span className="kartenkatalog-badge">{entry.layers.length}</span>
-                    {entry.theme.description ? <span className="kartenkatalog-theme-description">{entry.theme.description}</span> : null}
+                    {!query.trim() && !expanded.has(entry.theme.identifier) ? <Description item={entry.theme} preview /> : null}
                 </summary>
                 {query.trim() || expanded.has(entry.theme.identifier) ? (<div className="kartenkatalog-theme-content">
+                    <Description item={entry.theme} />
                     <button className="kartenkatalog-text-button" onClick={() => setDetail({theme: entry.theme, count: (catalog.find(e => e.theme.identifier === entry.theme.identifier)?.layers.length || 0)})} type="button">
-                        <Icon icon="info" /> {LocaleUtils.tr('kartenkatalog.themeInfo')}
+                        {LocaleUtils.tr('kartenkatalog.themeInfo')}
                     </button>
                     {entry.layers.map(layer => (<div className="kartenkatalog-layer" key={layer.id}>
                         <button className="kartenkatalog-layer-title kartenkatalog-text-button" onClick={() => setDetail({theme: entry.theme, layer})} type="button">{layer.title}</button>
