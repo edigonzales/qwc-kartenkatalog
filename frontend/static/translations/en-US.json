@@ -97,12 +97,7 @@
         "availability": "Availability",
         "dataOwner": "Responsible authority",
         "download": "Download",
-        "identifier": "Identifier",
-        "layers": "Map layers",
-        "organization": "Organization",
-        "theme": "Topic",
-        "transparency": "Intended transparency",
-        "type": "Type"
+        "layers": "Map layers"
       },
       "keywords": "Keywords",
       "layerAction": "{0}: {1}",
@@ -128,12 +123,7 @@
       "synonyms": "Synonyms",
       "themeInfo": "Topic information",
       "themePlural": "topics",
-      "themeSingular": "topic",
-      "types": {
-        "externalWms": "External WMS",
-        "group": "Layer group",
-        "layer": "Map layer"
-      }
+      "themeSingular": "topic"
     },
     "layertree": {
       "printlegend": "Print legend",

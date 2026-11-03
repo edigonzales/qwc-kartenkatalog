@@ -16,10 +16,6 @@ import {createQwcLayerController} from './kartenkatalog/qwc';
 
 import './style/Kartenkatalog.css';
 
-const typeLabel = type => ({
-    layergroup: LocaleUtils.tr('kartenkatalog.types.group'),
-    extwms: LocaleUtils.tr('kartenkatalog.types.externalWms')
-}[type] || LocaleUtils.tr('kartenkatalog.types.layer'));
 const statusLabel = status => ({
     visible: LocaleUtils.tr('kartenkatalog.status.visible'),
     hidden: LocaleUtils.tr('kartenkatalog.status.hidden'),
@@ -129,20 +125,18 @@ function Kartenkatalog({catalogUrl = '/catalog-api/v1/catalog', dispatch, layers
     const renderDetail = () => {
         const item = detail.layer || detail.theme;
         const moreInfo = safeLink(detail.theme.furtherInfoUrl);
+        const contact = /^mailto:[^\s@?]+@[^\s@?]+$/i.test(detail.theme.contact || '') ? detail.theme.contact : null;
         return (<div className="kartenkatalog-detail">
             <button className="button" onClick={() => setDetail(null)} type="button"><Icon icon="chevron-left" /><span>{LocaleUtils.tr('kartenkatalog.back')}</span></button>
             <h3>{item.title}</h3>
             {detail.layer ? <div className="kartenkatalog-detail-action">{addButton(detail.layer)}{errorMessage(detail.layer)}</div> : null}
             <Description item={item} />
             <dl>
-                {detail.layer ? <><dt>{LocaleUtils.tr('kartenkatalog.fields.theme')}</dt><dd>{detail.theme.title}</dd><dt>{LocaleUtils.tr('kartenkatalog.fields.identifier')}</dt><dd><code>{item.qwcLayerName}</code></dd>
-                    <dt>{LocaleUtils.tr('kartenkatalog.fields.type')}</dt><dd>{typeLabel(item.type)}</dd>
-                    {typeof item.transparency === 'number' ? <><dt>{LocaleUtils.tr('kartenkatalog.fields.transparency')}</dt><dd>{item.transparency} %</dd></> : null}
-                    {item.organization ? <><dt>{LocaleUtils.tr('kartenkatalog.fields.organization')}</dt><dd>{item.organization}</dd></> : null}
+                {detail.layer ? <>
                     {item.publicationScope ? <><dt>{LocaleUtils.tr('kartenkatalog.fields.availability')}</dt><dd>{item.publicationScope}</dd></> : null}
                     {typeof item.downloadAvailable === 'boolean' ? <><dt>{LocaleUtils.tr('kartenkatalog.fields.download')}</dt><dd>{item.downloadAvailable ? LocaleUtils.tr('kartenkatalog.downloadAvailable') : LocaleUtils.tr('kartenkatalog.downloadUnavailable')}</dd></> : null}
                 </> : <><dt>{LocaleUtils.tr('kartenkatalog.fields.layers')}</dt><dd>{detail.count}</dd></>}
-                {detail.theme.dataOwner ? <><dt>{LocaleUtils.tr('kartenkatalog.fields.dataOwner')}</dt><dd>{detail.theme.dataOwner}</dd></> : null}
+                {detail.theme.dataOwner ? <><dt>{LocaleUtils.tr('kartenkatalog.fields.dataOwner')}</dt><dd>{contact ? <a href={contact}>{detail.theme.dataOwner}</a> : detail.theme.dataOwner}</dd></> : null}
             </dl>
             <Terms title={LocaleUtils.tr('kartenkatalog.keywords')} values={item.keywords} />
             <Terms title={LocaleUtils.tr('kartenkatalog.synonyms')} values={item.synonyms} />

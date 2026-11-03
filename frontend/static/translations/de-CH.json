@@ -97,12 +97,7 @@
         "availability": "Verfügbarkeit",
         "dataOwner": "Zuständige Stelle",
         "download": "Download",
-        "identifier": "Kennung",
-        "layers": "Kartenebenen",
-        "organization": "Organisation",
-        "theme": "Thema",
-        "transparency": "Vorgesehene Transparenz",
-        "type": "Typ"
+        "layers": "Kartenebenen"
       },
       "keywords": "Schlagwörter",
       "layerAction": "{0}: {1}",
@@ -128,12 +123,7 @@
       "synonyms": "Synonyme",
       "themeInfo": "Themeninformationen",
       "themePlural": "Themen",
-      "themeSingular": "Thema",
-      "types": {
-        "externalWms": "Externer WMS",
-        "group": "Layergruppe",
-        "layer": "Kartenebene"
-      }
+      "themeSingular": "Thema"
     },
     "layertree": {
       "printlegend": "Legende drucken",
