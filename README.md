@@ -84,6 +84,18 @@ cd ../kartenkatalog
 
 `npm start` erhält den ursprünglichen Upstream-Modus mit lokaler Theme-Generierung und benötigt die dort konfigurierten GIS-/Fachservices. `npm test`, `npm run lint:catalog`, `node --test scripts/dev.test.cjs` und `bash scripts/test-scripts.sh` prüfen die lokalen Erweiterungen. `python3 scripts/smoke.py` prüft einen laufenden Stack (optional `--url http://127.0.0.1:18082`).
 
+## Optionales Theme `modern`
+
+Das Theme `modern` gestaltet den normalen QWC2 mit hellen Flächen, dunkler Schrift, dezenten Konturen und Schatten. Aktive Werkzeuge und ausgewählte Einträge erhalten blaugraue Flächen. Interaktionsrahmen und Fokus verwenden dasselbe Blau; Links bleiben dunkelrot. Topbar und Suchfeld behalten ihre ursprünglichen QWC2-Höhen. Die Topbar verwendet den ursprünglichen QWC2-Schatten ohne Farblinie. Die ursprünglichen QWC2-Buttonformen bleiben erhalten: eckige Messbuttons und runde Kartenbuttons. Die Objektabfrage erhält einen kleinen Innenabstand zwischen Ergebnisrahmen und Fensterkante. Der Kartenkatalog verwendet dieselbe Farbgestaltung; Beschreibungen behalten beim Aufklappen ihre normale Zeilenhöhe.
+
+- [modern](http://127.0.0.1:8082/map/?style=modern)
+- [default](http://127.0.0.1:8082/map/?style=default)
+- [somap](http://127.0.0.1:8082/map/?style=somap)
+
+Das Theme bleibt optional; die Standardkonfiguration wird nicht geändert. Zum Vergleichen den gewünschten `style` ausdrücklich angeben: QWC2 kann eine Style-Auswahl über die Einstellungen speichern und beim nächsten Start wiederverwenden. Das blosse Entfernen des Parameters garantiert daher keinen Wechsel zurück. Weitere Kartenparameter lassen sich mit `&` ergänzen.
+
+Alle Anpassungen in `frontend/static/assets/css/modern.css` sind an die Root-Klasse `modern` gebunden. Es gibt keine Änderungen am QWC2-Kern oder an Plugin- und Authentifizierungslogik. Die spezielle my.so.ch-Oberfläche erhält keine eigenen Anpassungen; bei ausdrücklich gewähltem `modern` übernehmen gemeinsam genutzte Komponenten jedoch dessen Farbvariablen. Reduzierte Bewegung wird über `prefers-reduced-motion` berücksichtigt.
+
 ## Live-Anbindung und Plugin
 
 Container und Remote-Dev-Modus laden die öffentliche Konfiguration bei jedem Abruf frisch von `https://geo.so.ch`. Lokale Assets haben Vorrang, fehlende Vorschaubilder kommen gezielt vom Live-System. Suche, Layer-Nachladen, Hintergrundkarten, Feature-Info und Legenden benötigen Live-Dienste. Fehler ergeben 502 statt Beispieldaten. Ohne Internet funktioniert dieser Stack deshalb nicht vollständig.

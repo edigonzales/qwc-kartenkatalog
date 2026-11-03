@@ -1,0 +1,171 @@
+/* Optional QWC2 theme: ?style=modern. All changes require the root class.
+   Keep selection surfaces blue-grey and interaction accents blue. */
+:root.modern {
+    --text-color: #243746;
+    --text-color-link: #aa0015;
+    --text-color-disabled: #60717e;
+    --container-bg-color: #ffffff;
+    --input-bg-color: #ffffff;
+    --input-bg-color-disabled: #eff3f6;
+    --border-color: #d8e3ea;
+    --color-active: #176fa6;
+    --focus-outline: 2px solid var(--color-active);
+
+    --panel-bg-color: rgba(255, 255, 255, 0.97);
+    --panel-text-color: #243746;
+    --titlebar-bg-color: #f4f8fa;
+    --titlebar-text-color: #243746;
+
+    --button-bg-color: #ffffff;
+    --button-bg-color-hover: #edf4f8;
+    --button-bg-color-active: #d8e3ea;
+    --button-bg-color-active-hover: #c7d7e2;
+    --button-bg-color-disabled: #f1f4f6;
+    --button-text-color: #243746;
+    --button-text-color-hover: #243746;
+    --button-text-color-active: #243746;
+    --button-text-color-active-hover: #243746;
+    --button-text-color-disabled: #60717e;
+
+    --list-bg-color: #ffffff;
+    --list-section-bg-color: #eef4f8;
+    --list-section-bg-color-hover: #e3edf3;
+    --list-section-text-color: #243746;
+    --list-item-bg-color-even: #f8fbfc;
+    --list-item-bg-color-hover: #edf4f8;
+    --list-item-bg-color-active: #d8e3ea;
+    --list-item-bg-color-active-hover: #c7d7e2;
+    --list-item-text-color-hover: #243746;
+    --list-item-text-color-active: #243746;
+    --list-item-text-color-active-hover: #243746;
+
+    --map-button-bg-color: #ffffff;
+    --map-button-text-color: #243746;
+    --map-button-hover-bg-color: #edf4f8;
+    --map-button-hover-text-color: #243746;
+    --map-button-active-bg-color: #d8e3ea;
+    --map-button-active-text-color: #243746;
+
+    --app-menu-bg-color: #ffffff;
+    --app-menu-text-color: #243746;
+    --app-menu-bg-color-hover: #edf4f8;
+    --app-menu-text-color-hover: #243746;
+    --app-submenu-bg-color: #f4f8fa;
+    --app-submenu-text-color: #243746;
+    --app-submenu-bg-color-hover: #e3edf3;
+    --app-submenu-text-color-hover: #243746;
+}
+
+/* The standard TopBar; the my.so.ch wrapper has its own presentation. */
+html.modern div.TopBar:not(.fullscreen) {
+    box-shadow: 0 2px 4px rgba(136, 136, 136, 0.5);
+    backdrop-filter: none;
+}
+
+html.modern div.sidebar {
+    box-shadow: 0 8px 28px rgba(36, 55, 70, 0.13);
+}
+html.modern div.sidebar div.sidebar-titlebar {
+    border-bottom: 1px solid var(--border-color);
+    font-weight: 600;
+}
+
+html.modern button.map-button {
+    box-shadow: 0 3px 12px rgba(36, 55, 70, 0.17);
+}
+html.modern button.map-button-active {
+    box-shadow: inset 0 -2px var(--color-active), 0 3px 12px rgba(36, 55, 70, 0.17);
+}
+html.modern button.map-button-active:hover {
+    background-color: var(--button-bg-color-active-hover);
+}
+html.modern button.map-button-disabled:hover {
+    background-color: var(--map-button-bg-color);
+}
+html.modern div.Toolbar > .toolbar-item-active {
+    background-color: var(--button-bg-color-active);
+    color: var(--button-text-color-active);
+    border-color: var(--border-color);
+    box-shadow: inset 0 -2px var(--color-active);
+}
+html.modern div.Toolbar > .toolbar-item-active:hover {
+    background-color: var(--button-bg-color-active-hover);
+}
+html.modern #LayerTree span.layertree-item-menubutton-active,
+html.modern div.ThemeList div.theme-item-info-menu-active {
+    background-color: var(--button-bg-color-active);
+    color: var(--button-text-color-active);
+    box-shadow: inset 0 -2px var(--color-active);
+}
+
+html.modern div.TopBar div.SearchBox > .searchbox-field {
+    border-color: #c7d7e2;
+}
+html.modern div.searchbox-results-section-title {
+    border-bottom: 1px solid var(--border-color);
+}
+html.modern div.searchbox-result {
+    padding: 0.45em 0.65em;
+}
+html.modern div.AppMenu div.appmenu-menu-container {
+    box-shadow: 0 8px 24px rgba(36, 55, 70, 0.14);
+}
+
+/* Window padding is bypassed by QWC2's absolutely positioned portal. */
+html.modern div.identify-body {
+    padding: 0.25em;
+}
+
+/* Preserve disabled/scale-dependent states and compact nested groups. */
+html.modern #LayerTree div.layertree-item {
+    min-height: 2em;
+    height: auto;
+    padding: 0.1em 0.2em;
+}
+
+html.modern #Kartenkatalog .kartenkatalog-body {
+    font-size: 15px;
+}
+/* Expanded descriptions must keep the same line spacing as their preview. */
+html.modern #Kartenkatalog .kartenkatalog-description,
+html.modern #Kartenkatalog .kartenkatalog-layer-description {
+    line-height: normal;
+}
+html.modern #Kartenkatalog summary {
+    padding: 0.85em;
+}
+html.modern #Kartenkatalog .kartenkatalog-badge {
+    border-radius: 999px;
+    background: #f4f8fa;
+    padding: 0.12em 0.6em;
+}
+
+html.modern :focus-visible {
+    outline: var(--focus-outline);
+    outline-offset: -2px;
+}
+
+@media (max-width: 700px) {
+    html.modern #Kartenkatalog summary {
+        padding: 0.75em;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    html.modern div.sidebar,
+    html.modern div.sidebar:not(.sidebar-open),
+    html.modern div.sidebar *,
+    html.modern div.TopBar,
+    html.modern div.TopBar *,
+    html.modern button.button,
+    html.modern button.map-button,
+    html.modern div.Toolbar > .icon,
+    html.modern div.SearchBox,
+    html.modern div.SearchBox *,
+    html.modern div.background-switcher,
+    html.modern div.AppMenu * {
+        /* Override QWC2's more specific open/closed widget states as well. */
+        transition: none !important;
+        animation: none !important;
+    }
+}
