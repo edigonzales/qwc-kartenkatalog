@@ -101,6 +101,7 @@
       },
       "keywords": "Schlagwörter",
       "layerAction": "{0}: {1}",
+      "layerInfo": "Kartenebeneninformationen",
       "layerPlural": "Kartenebenen",
       "layerSingular": "Kartenebene",
       "loadingCatalog": "Kartenkatalog wird geladen …",
@@ -113,7 +114,6 @@
       "retry": "Erneut laden",
       "searchLabel": "Themen und Kartenebenen suchen",
       "searchPlaceholder": "Themen und Kartenebenen suchen …",
-      "showMetadata": "Metadaten anzeigen",
       "status": {
         "hidden": "Aktivieren",
         "missing": "Hinzufügen",

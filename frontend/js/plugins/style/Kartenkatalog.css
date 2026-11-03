@@ -33,14 +33,16 @@
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
-#Kartenkatalog .kartenkatalog-theme-content { padding: 0 0.75em 0.5em; }
+#Kartenkatalog .kartenkatalog-theme-content { padding: 0 0.75em; }
 #Kartenkatalog .kartenkatalog-layer {
+    border-top: 1px solid var(--border-color);
+    padding: 0.6em 0 0;
+}
+#Kartenkatalog .kartenkatalog-layer-header {
     display: grid;
-    grid-template-columns: minmax(0, 1fr) auto auto;
+    grid-template-columns: minmax(0, 1fr) auto;
     align-items: center;
     gap: 0.35em;
-    border-top: 1px solid var(--border-color);
-    padding: 0.6em 0;
 }
 #Kartenkatalog .kartenkatalog-text-button, #Kartenkatalog .kartenkatalog-icon-button {
     background: none;
@@ -52,11 +54,11 @@
     text-align: left;
 }
 #Kartenkatalog .kartenkatalog-text-button { padding: 0.25em 0; }
-#Kartenkatalog .kartenkatalog-theme-info { color: var(--text-color-link); }
+#Kartenkatalog .kartenkatalog-theme-info, #Kartenkatalog .kartenkatalog-layer-info { display: block; color: var(--text-color-link); }
 #Kartenkatalog .kartenkatalog-text-button:hover { text-decoration: underline; }
 #Kartenkatalog .kartenkatalog-layer-title { font-weight: bold; overflow-wrap: anywhere; }
 #Kartenkatalog .kartenkatalog-add { display: inline-flex; align-items: center; gap: 0.35em; white-space: nowrap; margin: 0; }
-#Kartenkatalog .kartenkatalog-layer-description { grid-column: 1 / -1; margin: 0.25em 0 0; }
+#Kartenkatalog .kartenkatalog-layer-description { margin: 0.25em 0 0; line-height: 1.5; }
 #Kartenkatalog .kartenkatalog-error { grid-column: 1 / -1; margin: 0.3em 0; border-left: 3px solid var(--border-color); padding-left: 0.5em; }
 #Kartenkatalog .spinner { width: 1em; height: 1em; margin-right: 0.3em; }
 #Kartenkatalog .kartenkatalog-loading, #Kartenkatalog .kartenkatalog-empty { padding: 1em; }

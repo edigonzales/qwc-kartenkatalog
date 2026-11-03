@@ -101,6 +101,7 @@
       },
       "keywords": "Keywords",
       "layerAction": "{0}: {1}",
+      "layerInfo": "Layer information",
       "layerPlural": "map layers",
       "layerSingular": "map layer",
       "loadingCatalog": "Loading map catalog …",
@@ -113,7 +114,6 @@
       "retry": "Reload",
       "searchLabel": "Search topics and map layers",
       "searchPlaceholder": "Search topics and map layers …",
-      "showMetadata": "Show metadata",
       "status": {
         "hidden": "Activate",
         "missing": "Add",

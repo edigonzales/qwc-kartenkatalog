@@ -179,10 +179,12 @@ function Kartenkatalog({catalogUrl = '/catalog-api/v1/catalog', dispatch, layers
                         {LocaleUtils.tr('kartenkatalog.themeInfo')}
                     </button>
                     {entry.layers.map(layer => (<div className="kartenkatalog-layer" key={layer.id}>
-                        <button className="kartenkatalog-layer-title kartenkatalog-text-button" onClick={() => setDetail({theme: entry.theme, layer})} type="button">{layer.title}</button>
-                        <button aria-label={LocaleUtils.tr('kartenkatalog.metadataFor', layer.title)} className="kartenkatalog-icon-button" onClick={() => setDetail({theme: entry.theme, layer})} title={LocaleUtils.tr('kartenkatalog.showMetadata')} type="button"><Icon icon="info" /></button>
-                        {addButton(layer)}
+                        <div className="kartenkatalog-layer-header">
+                            <button className="kartenkatalog-layer-title kartenkatalog-text-button" onClick={() => setDetail({theme: entry.theme, layer})} type="button">{layer.title}</button>
+                            {addButton(layer)}
+                        </div>
                         {layer.description ? <p className="kartenkatalog-layer-description">{layer.description}</p> : null}
+                        <button aria-label={LocaleUtils.tr('kartenkatalog.metadataFor', layer.title)} className="kartenkatalog-text-button kartenkatalog-layer-info" onClick={() => setDetail({theme: entry.theme, layer})} type="button">{LocaleUtils.tr('kartenkatalog.layerInfo')}</button>
                         {errorMessage(layer)}
                     </div>))}
                 </div>) : null}
