@@ -33,7 +33,7 @@
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
-#Kartenkatalog .kartenkatalog-theme-content { padding: 0 0.75em 0 2.15em; }
+#Kartenkatalog .kartenkatalog-theme-content { padding: 0 0.75em 0.6em 2.15em; }
 #Kartenkatalog .kartenkatalog-layers {
     margin-top: 0.5em;
     border-left: 1px solid var(--border-color);

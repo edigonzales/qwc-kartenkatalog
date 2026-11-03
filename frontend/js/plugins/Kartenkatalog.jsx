@@ -151,7 +151,7 @@ function Kartenkatalog({catalogUrl = '/catalog-api/v1/catalog', dispatch, layers
     const renderList = () => (<>
         <div className="kartenkatalog-search">
             <InputContainer>
-                <span role="prefix"><Icon icon="search" /></span>
+                <Icon icon="search" role="prefix" />
                 <input aria-label={LocaleUtils.tr('kartenkatalog.searchLabel')} onChange={event => setQuery(event.target.value)}
                     placeholder={LocaleUtils.tr('kartenkatalog.searchPlaceholder')} role="input" type="search" value={query} />
                 {query ? <button aria-label={LocaleUtils.tr('kartenkatalog.clearSearch')} className="kartenkatalog-icon-button" onClick={() => setQuery('')} role="suffix" type="button"><Icon icon="clear" /></button> : null}
